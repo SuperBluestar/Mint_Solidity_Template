@@ -6,17 +6,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Providers from 'Providers';
 
-// @ts-ignore
-declare global {
-  // tslint:disable-next-line
-  interface Window {
-    web3: any;
-    ethereum: any;
-    Web3Modal: any;
-    [name: string]: any;
-  }
-}
-
 ReactDOM.render(
   <React.StrictMode>
     <Providers>
