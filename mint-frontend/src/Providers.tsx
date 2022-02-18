@@ -1,15 +1,14 @@
 import { FC } from 'react';
 import Web3ContextProvider from 'context/web3Context';
-import { Web3ReactProvider } from '@web3-react/core'
-import { getLibrary } from 'utils/web3React'
+import Web3ModalContextProvider from 'context/web3ModalContext';
 
 const Providers: FC = ({ children }) => {
     return (
-        <Web3ReactProvider getLibrary={getLibrary}>
-            <Web3ContextProvider>
+        <Web3ContextProvider>
+            <Web3ModalContextProvider>
             { children }
-            </Web3ContextProvider>
-        </Web3ReactProvider>
+            </Web3ModalContextProvider>
+        </Web3ContextProvider>
     )
 }
 

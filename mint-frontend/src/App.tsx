@@ -1,11 +1,15 @@
 import React from 'react';
 import Loader from 'components/Loader';
 
+import PriorityExample from 'components/connectors/PriorityExample'
+import Routes from 'Routes';
+
 function App() {
   return (
-    <div className="App flex items-center justify-center h-screen">
-      <Loader />
-    </div>
+    <>
+    <PriorityExample />
+    <Routes />
+    </>
   );
 }
 

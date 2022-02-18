@@ -2,25 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Home from 'pages/Home';
 import reportWebVitals from './reportWebVitals';
 import Providers from 'Providers';
+import { Buffer } from 'buffer';
+import Web3 from 'web3';
 
-// @ts-ignore
+window.Buffer = Buffer;
+
 declare global {
-  // tslint:disable-next-line
   interface Window {
-    web3: any;
-    ethereum: any;
-    Web3Modal: any;
-    [name: string]: any;
+    web3: Web3
   }
 }
 
 ReactDOM.render(
   <React.StrictMode>
     <Providers>
-      <Home />
+      <App />
     </Providers>
   </React.StrictMode>,
   document.getElementById('root')

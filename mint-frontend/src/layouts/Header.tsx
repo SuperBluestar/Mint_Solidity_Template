@@ -1,39 +1,27 @@
-import * as React from "react";
-import styled from "styled-components";
-import * as PropTypes from "prop-types";
-import Blockie from "components/Blockie";
-import Banner from "components/Banner";
-import { ellipseAddress, getChainData } from "helpers/utilities";
-import { transitions } from "styles";
+import { Web3ModalContext } from 'context/web3ModalContext'
+import { useContext } from 'react';
+// import Web3 from 'web3';
 
-interface IHeaderProps {
-  killSession: () => void;
-  connected: boolean;
-  address: string;
-  chainId: number;
-  loginMetamask?: () => void;
-  loginWalletConnector?: () => void;
+
+const Header = () => {
+    const { openModal, isActive, wallet, account, balance } = useContext(Web3ModalContext);
+    
+    return (
+        <div className="w-full">
+            <div className="border-b-2 bg-green-300 px-4 py-2 mx-auto md:container flex justify-between">
+                <h3>Header</h3>
+                { !isActive ? 
+                <div className="" onClick={openModal}>
+                    Connect Wallet
+                </div> : <div className="flex">
+                    <span>{ wallet }</span>
+                    <span>{ account }</span>
+                    <span>{ balance }</span>
+                </div>
+                }
+            </div>
+        </div>
+    )
 }
-
-const Header = (props: IHeaderProps) => {
-  const { connected, address, chainId, loginWalletConnector, loginMetamask, killSession } = props;
-  return (
-    <header className="w-full flex flex-shrink-0 flex-grow-0 justify-end">
-      { connected ? 
-        <>
-          <div>{ address }</div>
-          <div>{ chainId }</div>
-          <button onClick={killSession}>Disconnect</button>
-        </> : 
-        <button onClick={loginWalletConnector}>ConnectWallet</button>
-      }
-    </header>
-  );
-};
-
-Header.propTypes = {
-  killSession: PropTypes.func.isRequired,
-  address: PropTypes.string,
-};
 
 export default Header;
