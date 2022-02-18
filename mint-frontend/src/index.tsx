@@ -2,14 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-// import Home from 'pages/Home';
+import Home from 'pages/Home';
 import reportWebVitals from './reportWebVitals';
 import Providers from 'Providers';
+
+// @ts-ignore
+declare global {
+  // tslint:disable-next-line
+  interface Window {
+    web3: any;
+    ethereum: any;
+    Web3Modal: any;
+    [name: string]: any;
+  }
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <Providers>
-      <App />
+      <Home />
     </Providers>
   </React.StrictMode>,
   document.getElementById('root')
