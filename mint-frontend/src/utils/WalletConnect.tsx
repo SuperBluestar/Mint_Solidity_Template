@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { IconButton } from 'components/atoms/IconButton';
-import { MetaMask as MetaMaskIcon, WalletConnect as WalletConnectIcon, WalletLink as WalletLinkIcon } from 'components/icons';
+import { MetaMask as MetaMaskIcon, WalletConnect as WalletConnectIcon, WalletLink as WalletLinkIcon, Network as NetworkIcon } from 'components/icons';
 import type { Web3ReactHooks } from '@web3-react/core'
 import { MetaMask } from '@web3-react/metamask'
 import { WalletLink } from '@web3-react/walletlink'
@@ -53,6 +53,7 @@ export const ConnectWithSelect = ({
         }
     }, [chainId, isActive]);
     useEffect(() => {
+        console.log(error)
         if (error) {
             connector.deactivate();
         }
@@ -64,7 +65,7 @@ export const ConnectWithSelect = ({
             : (
                 connector instanceof WalletLink
                 ? WalletLinkIcon
-                : MetaMaskIcon
+                : NetworkIcon
             )
         )
     const wallet = connector instanceof MetaMask 
@@ -74,20 +75,31 @@ export const ConnectWithSelect = ({
             : (
                 connector instanceof WalletLink
                 ? "Wallet Link"
-                : "Another"
+                : (
+                    connector instanceof Network
+                    ? "Network"
+                    : "Unknown"
+                )
             )
         )
+
+    const walletConnect = () => {
+        connector instanceof WalletConnect || connector instanceof Network
+        ? connector.activate(desiredChainId === -1 ? undefined : desiredChainId)
+        : connector.activate(desiredChainId === -1 ? undefined : getAddChainParameters(desiredChainId))
+    }
+
+    // useEffect(() => {
+    //     if (!isActive && connector instanceof MetaMask) {
+    //         walletConnect();
+    //     }
+    // }, [isActive])
     if (error) {
         return (
             <IconButton 
                 Icon={Icon} 
                 text="Failed, try again or install"
-                onClick={
-                    () =>
-                        connector instanceof WalletConnect || connector instanceof Network
-                        ? connector.activate(desiredChainId === -1 ? undefined : desiredChainId)
-                        : connector.activate(desiredChainId === -1 ? undefined : getAddChainParameters(desiredChainId))
-                }
+                onClick={ walletConnect }
                 disabled={ isActivating || !!error }
             />
         )
@@ -104,13 +116,8 @@ export const ConnectWithSelect = ({
             <IconButton 
                 Icon={Icon} 
                 text={wallet}
-                onClick={
-                    () =>
-                        connector instanceof WalletConnect || connector instanceof Network
-                        ? connector.activate(desiredChainId === -1 ? undefined : desiredChainId)
-                        : connector.activate(desiredChainId === -1 ? undefined : getAddChainParameters(desiredChainId))
-                }
-                disabled={ isActive && isActivating }
+                onClick={ walletConnect }
+                disabled={ isActivating }
             />
         )
     }
@@ -122,4 +129,8 @@ export const getName = (connector: Connector): string => {
     if (connector instanceof WalletLink) return 'WalletLink'
     if (connector instanceof Network) return 'Network'
     return 'Unknown'
+}
+
+export enum Hooks {
+    "MetaMask"= "MetaMask"
 }

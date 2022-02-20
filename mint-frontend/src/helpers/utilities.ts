@@ -1,4 +1,4 @@
-import * as ethUtil from "ethereumjs-util";
+// import * as ethUtil from "ethereumjs-util";
 import { IChainData } from "./types";
 import supportedChains from "./chains";
 import { apiGetGasPrices, apiGetAccountNonce } from "./api";
@@ -132,31 +132,31 @@ export function getChainData(chainId: number): IChainData {
   return chainData;
 }
 
-export function hashPersonalMessage(msg: string): string {
-  const buffer = Buffer.from(msg);
-  const result = ethUtil.hashPersonalMessage(buffer);
-  const hash = ethUtil.bufferToHex(result);
-  return hash;
-}
+// export function hashPersonalMessage(msg: string): string {
+//   const buffer = Buffer.from(msg);
+//   const result = ethUtil.hashPersonalMessage(buffer);
+//   const hash = ethUtil.bufferToHex(result);
+//   return hash;
+// }
 
-export function recoverPublicKey(sig: string, hash: string): string {
-  const sigParams = ethUtil.fromRpcSig(sig);
-  const hashBuffer = Buffer.from(hash.replace("0x", ""), "hex");
-  const result = ethUtil.ecrecover(
-    hashBuffer,
-    sigParams.v,
-    sigParams.r,
-    sigParams.s
-  );
-  const signer = ethUtil.bufferToHex(ethUtil.publicToAddress(result));
-  return signer;
-}
+// export function recoverPublicKey(sig: string, hash: string): string {
+//   const sigParams = ethUtil.fromRpcSig(sig);
+//   const hashBuffer = Buffer.from(hash.replace("0x", ""), "hex");
+//   const result = ethUtil.ecrecover(
+//     hashBuffer,
+//     sigParams.v,
+//     sigParams.r,
+//     sigParams.s
+//   );
+//   const signer = ethUtil.bufferToHex(ethUtil.publicToAddress(result));
+//   return signer;
+// }
 
-export function recoverPersonalSignature(sig: string, msg: string): string {
-  const hash = hashPersonalMessage(msg);
-  const signer = recoverPublicKey(sig, hash);
-  return signer;
-}
+// export function recoverPersonalSignature(sig: string, msg: string): string {
+//   const hash = hashPersonalMessage(msg);
+//   const signer = recoverPublicKey(sig, hash);
+//   return signer;
+// }
 
 export async function formatTestTransaction(address: string, chainId: number) {
   // from
@@ -203,4 +203,13 @@ export async function formatTestTransaction(address: string, chainId: number) {
 
 export function isObject(obj: any): boolean {
   return typeof obj === "object" && !!Object.keys(obj).length;
+}
+
+// 
+export function toFixed(str: string, len: number): string {
+  return str.split(".").map((substr, id) => 
+    (id === 0) ? substr : (
+      (id === 1) ? substr.substring(0, len) : ""
+    )
+  ).join(".")
 }

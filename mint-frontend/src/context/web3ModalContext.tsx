@@ -8,33 +8,45 @@ import { hooks as walletConnectHooks, walletConnect } from 'connectors/walletCon
 import { hooks as walletLinkHooks, walletLink } from 'connectors/walletLink';
 import { hooks as networkHooks, network } from 'connectors/network'
 
-import { getPriorityConnector } from '@web3-react/core'
+// import { getPriorityConnector } from '@web3-react/core'
 import { Connector } from '@web3-react/types';
-import BN from 'bn.js';
-import { formatFixedDecimals } from 'helpers/bignumber'
-import { CHAIN_ID, TOKEN_DECIMAL } from 'constant'
+import type { Web3Provider } from '@ethersproject/providers';
 
 interface IWeb3ModalContext {
     openModal?: () => void,
     closeModal?: () => void,
-    isActive?: boolean,
-    wallet?: string,
-    account?: string,
-    chainId?: number,
-    message?: string,
-    balance?: BN | string,
+    ChainId?: number,
+    IsActivating?: boolean,
+    Error?: Error,
+    Accounts?: string[],
+    Account?: string,
+    IsActive?: boolean,
+    Provider?: Web3Provider,
+    ENSNames?: (string | null)[],
+    ENSName?: string | null,
     priorityConnector?: Connector
 }
 
 export const Web3ModalContext = createContext<IWeb3ModalContext>({ });
 
-const { usePriorityConnector } = getPriorityConnector(
-    [metaMask, metaMaskHooks],
-    //@ts-ignore
-    [walletConnect, walletConnectHooks],
-    [walletLink, walletLinkHooks],
-    [network, networkHooks]
-)
+// const { 
+//     usePriorityConnector, 
+//     useSelectedChainId, 
+//     useSelectedAccounts, 
+//     useSelectedIsActivating,
+//     useSelectedError,
+//     useSelectedAccount,
+//     useSelectedIsActive,
+//     useSelectedProvider,
+//     useSelectedENSNames,
+//     useSelectedENSName
+// } = getPriorityConnector(
+//     [metaMask, metaMaskHooks],
+//     //@ts-ignore
+//     [walletConnect, walletConnectHooks],
+//     [walletLink, walletLinkHooks],
+//     [network, networkHooks]
+// )
 
 //@ts-ignore
 const Web3ModalContextProvider = ({ children }) => {
@@ -75,7 +87,7 @@ const Web3ModalContextProvider = ({ children }) => {
                 onRequestClose={closeModal}
                 closeTimeoutMS={0}
                 contentLabel="Wallet Connect Web3Modal"
-                overlayClassName="fixed left-0 top-0 w-full h-full flex justify-center items-center bg-gray-300 bg-opacity-40"
+                overlayClassName="fixed left-0 top-0 w-full h-full flex justify-center items-center backdrop-blur-sm"
                 id="modal-id"
                 className="w-96 px-6 py-4 border border-green-900 rounded-md outline-none"
                 ariaHideApp={false}
@@ -121,73 +133,32 @@ const Web3ModalContextProvider = ({ children }) => {
         chainIdNetwork, isActivatingNetwork, errorNetwork, isActiveNetwork,
     ]);
 
-    const priorityConnector = usePriorityConnector()
-    console.log(`Priority Connector: ${getName(priorityConnector)}`)
+    // const priorityConnector = usePriorityConnector()
 
-    const [wallet, setWallet] = useState<string>("");
-    const [account, setAccount] = useState<string | undefined>("");
-    const [chainId, setChainId] = useState<number>(CHAIN_ID);
-    const [message, setMessage] = useState<string | undefined>("");
-    const [balance, setBalance] = useState<BN | string>("");
-    
-    const accountChangeHandler = useCallback((accounts) => {
-        setAccount(accounts[0])
-    }, [priorityConnector]);
-    const chainChangeHandler = useCallback((chainId) => {
-        setChainId(chainId)
-    }, [priorityConnector]);
-    const messageHandler = useCallback((message) => {
-        setMessage(message)
-    }, [])
-    useEffect(() => {
-        let walletName: string = getName(priorityConnector);
-        setWallet(walletName);
-        if (walletName !== "Unknown") {
-            (async () => {
-                priorityConnector.provider?.request({
-                    method: "eth_accounts",
-                    params: []
-                }).then((accounts: any) => {
-                    setAccount(accounts[0])
-                    console.log(accounts)
-                    priorityConnector.provider?.request({
-                        method: "eth_getBalance",
-                        params: [
-                            accounts[0], "latest"
-                        ]
-                    }).then((balance: any) => {
-                        console.log(balance)
-                        setBalance(formatFixedDecimals(balance, TOKEN_DECIMAL))
-                    }).catch(err => {
-                        console.log(err)
-                    })
-                }).catch(err => {
-                    console.log(err)
-                })
-                // setBalance(balance);
-                priorityConnector.provider?.on("accountsChanged", accountChangeHandler)
-                priorityConnector.provider?.on("chainChanged", chainChangeHandler)
-                priorityConnector.provider?.on("message", messageHandler)
-            })()
-        }
-        return () => {
-            priorityConnector.provider?.removeListener("accountsChanged", accountChangeHandler)
-            priorityConnector.provider?.removeListener("chainChanged", chainChangeHandler)
-            priorityConnector.provider?.removeListener("message", messageHandler)
-        }
-    }, [priorityConnector]);
+    // const ChainId = useSelectedChainId(priorityConnector);
+    // const Accounts = useSelectedAccounts(priorityConnector);
+    // const IsActivating = useSelectedIsActivating(priorityConnector);
+    // const Error = useSelectedError(priorityConnector);
+    // const Account = useSelectedAccount(priorityConnector);
+    // const IsActive = useSelectedIsActive(priorityConnector);
+    // const Provider = useSelectedProvider(priorityConnector);
+    // const ENSNames = useSelectedENSNames(priorityConnector, Provider);
+    // const ENSName = useSelectedENSName(priorityConnector, Provider);
     return (
         <Web3ModalContext.Provider 
             value={{
                 openModal,
                 closeModal,
-                isActive: (wallet !== "Unknown" && wallet !== "" && balance !== ""),
-                wallet,
-                account,
-                chainId,
-                message,
-                balance,
-                priorityConnector
+                // priorityConnector,
+                // ChainId,
+                // Accounts,
+                // IsActivating,
+                // Error,
+                // Account,
+                // IsActive,
+                // Provider,
+                // ENSNames,
+                // ENSName
             }}
         >
         { children }
