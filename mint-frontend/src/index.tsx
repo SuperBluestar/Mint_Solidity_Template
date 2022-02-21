@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-import App from './App';
+import AppRoutes from './AppRoutes';
 import reportWebVitals from './reportWebVitals';
 import Providers from 'Providers';
 import { Buffer } from 'buffer';
@@ -18,7 +19,9 @@ declare global {
 ReactDOM.render(
   <React.StrictMode>
     <Providers>
-      <App />
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </Providers>
   </React.StrictMode>,
   document.getElementById('root')

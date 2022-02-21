@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
 
-export const useTotalSupply = (
+export const useCurrentSupply = (
     contract?: NftMint,
 ): number | undefined => {
-    const [ totalSupply, setTotalSupply ] = useState<number | undefined>()
+    const [ currentSupply, setCurrentSupply ] = useState<number | undefined>()
     useEffect(() => {
         if (contract) {
             (async () => {
-                let totalSupply_ = await contract?.totalSupply();
-                setTotalSupply(totalSupply_);
+                let currentSupply_ = await contract?.currentSupply();
+                setCurrentSupply(currentSupply_);
             })()
         }
     }, [contract]);
-    return totalSupply
+    return currentSupply
 }

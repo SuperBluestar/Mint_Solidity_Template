@@ -8,7 +8,6 @@ import { hooks as walletConnectHooks, walletConnect } from 'connectors/walletCon
 import { hooks as walletLinkHooks, walletLink } from 'connectors/walletLink';
 import { hooks as networkHooks, network } from 'connectors/network'
 
-// import { getPriorityConnector } from '@web3-react/core'
 import { Connector } from '@web3-react/types';
 import type { Web3Provider } from '@ethersproject/providers';
 
@@ -28,25 +27,6 @@ interface IWeb3ModalContext {
 }
 
 export const Web3ModalContext = createContext<IWeb3ModalContext>({ });
-
-// const { 
-//     usePriorityConnector, 
-//     useSelectedChainId, 
-//     useSelectedAccounts, 
-//     useSelectedIsActivating,
-//     useSelectedError,
-//     useSelectedAccount,
-//     useSelectedIsActive,
-//     useSelectedProvider,
-//     useSelectedENSNames,
-//     useSelectedENSName
-// } = getPriorityConnector(
-//     [metaMask, metaMaskHooks],
-//     //@ts-ignore
-//     [walletConnect, walletConnectHooks],
-//     [walletLink, walletLinkHooks],
-//     [network, networkHooks]
-// )
 
 //@ts-ignore
 const Web3ModalContextProvider = ({ children }) => {
@@ -133,32 +113,14 @@ const Web3ModalContextProvider = ({ children }) => {
         chainIdNetwork, isActivatingNetwork, errorNetwork, isActiveNetwork,
     ]);
 
-    // const priorityConnector = usePriorityConnector()
-
-    // const ChainId = useSelectedChainId(priorityConnector);
-    // const Accounts = useSelectedAccounts(priorityConnector);
-    // const IsActivating = useSelectedIsActivating(priorityConnector);
-    // const Error = useSelectedError(priorityConnector);
-    // const Account = useSelectedAccount(priorityConnector);
-    // const IsActive = useSelectedIsActive(priorityConnector);
-    // const Provider = useSelectedProvider(priorityConnector);
-    // const ENSNames = useSelectedENSNames(priorityConnector, Provider);
-    // const ENSName = useSelectedENSName(priorityConnector, Provider);
+    // NftContract = (): Contract => {
+    //     return new ethers.Contract(NFT_CONTRACT[CHAIN_ID].address, NFT_CONTRACT[CHAIN_ID].abi);
+    // }
     return (
         <Web3ModalContext.Provider 
             value={{
                 openModal,
                 closeModal,
-                // priorityConnector,
-                // ChainId,
-                // Accounts,
-                // IsActivating,
-                // Error,
-                // Account,
-                // IsActive,
-                // Provider,
-                // ENSNames,
-                // ENSName
             }}
         >
         { children }

@@ -45,14 +45,14 @@ describe("NftMint", async function () {
     expect(await nftMint.currentSupply()).to.equal(0);
   });
   it("After Minting, confirm the status of contract", async function () {
-    const mintTx1 = await nftMint.mint({
+    const mintTx1 = await nftMint.publicMint(1, {
       //@ts-ignore
       from: owner.address
     });
     await mintTx1.wait();
 
     expect(await nftMint.currentSupply()).to.equal(1);
-    const mintTx2 = await nftMint.mint({
+    const mintTx2 = await nftMint.publicMint(1, {
       //@ts-ignore
       from: owner.address
     });
