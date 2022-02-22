@@ -3,15 +3,22 @@ import { NftMint } from "../../../mint-solidity/typechain/NftMint";
 
 export const useTotalSupply = (
     contract?: NftMint,
+    update?: number
 ): number | undefined => {
     const [ totalSupply, setTotalSupply ] = useState<number | undefined>()
     useEffect(() => {
         if (contract) {
-            (async () => {
-                let totalSupply_ = await contract?.totalSupply();
-                setTotalSupply(totalSupply_);
-            })()
+            let stale = false
+            void Promise.all([contract?.totalSupply()]).then(([totalSupply_]) => {
+                if (!stale) {
+                    setTotalSupply(totalSupply_);
+                }
+            });
+            return () => {
+              stale = true
+              setTotalSupply(undefined)
+            }
         }
-    }, [contract]);
+    }, [contract, update]);
     return totalSupply
 }

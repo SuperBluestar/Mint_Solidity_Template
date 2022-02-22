@@ -1,8 +1,9 @@
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import { Web3ModalContext } from 'context/web3ModalContext'
 import { CHAINS } from 'chains';
-import { CHAIN_ID } from 'constant';
+import { CHAIN_ID, md } from 'constant';
 import { 
     useAccount, 
     useChainId, 
@@ -21,6 +22,8 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { Network } from '@web3-react/network'
 import { getAddChainParameters } from "chains"
 import { useNftContract } from 'hooks';
+import { useApiInWhitelist } from 'hooks';
+import { setAxiosHeader } from 'services/apiService';
 
 const Header = () => {
     const { openModal } = useContext(Web3ModalContext);
@@ -47,6 +50,16 @@ const Header = () => {
     const contract = useNftContract(provider)
     const owner = useContractOwner(contract)
 
+    const isPortrait = useMediaQuery({ query: `(max-width: ${md})` });
+
+    const inWhitelist = useApiInWhitelist(Account);
+
+    useEffect(() => {
+        if (Account && owner && Account === owner) {
+            setAxiosHeader(Account);
+        }
+    }, [Account, owner]);
+
     return (
         <div className="w-full">
             <div className="border-b-2 bg-green-300 px-4 py-2 mx-auto md:container flex justify-between items-center">
@@ -65,15 +78,20 @@ const Header = () => {
                                 Switch Network
                             </div>
                         ) : (
-                            <div className="flex items-center">
+                            <div className={`flex ${ isPortrait ? "flex-col items-end" : "items-center" }`}>
+                                {
+                                    <span className={`w-8 h-8 rounded-full border flex justify-center items-center mr-4 ${ inWhitelist ? "animate-pulse bg-pink-700 text-white" : "bg-pink-300 text-black" }`}>
+                                    W
+                                    </span>
+                                }
                                 { 
                                     owner === Account ? 
-                                    <Link to="/admin"><span className="px-4 py-1 mr-4 cursor-pointer">Admin</span></Link> : 
+                                    <Link to="/admin"><span className="px-4 py-1 my-1 mr-4 cursor-pointer">Admin</span></Link> : 
                                     "" 
                                 }
-                                <span className="rounded-full border-2 border-pink-700 bg-pink-400 hover:bg-pink-500 px-4 py-1 mr-4 cursor-pointer">{ CHAINS[ChainId ? ChainId : CHAIN_ID].name }</span>
-                                <span className="rounded-full border-2 border-pink-700 bg-pink-400 hover:bg-pink-500 px-4 py-1 mr-4 cursor-pointer">{ ellipseAddress(Account, 6) }</span>
-                                <span>{ Balances ? "Ξ" + toFixed(formatEther(Balances[0]), 5) : "-" }</span>
+                                <span className="rounded-full border-2 border-pink-700 bg-pink-400 hover:bg-pink-500 px-4 py-1 my-1 mr-4 cursor-pointer">{ CHAINS[ChainId ? ChainId : CHAIN_ID].name }</span>
+                                <span className="rounded-full border-2 border-pink-700 bg-pink-400 hover:bg-pink-500 px-4 py-1 my-1 mr-4 cursor-pointer">{ ellipseAddress(Account, 6) }</span>
+                                <span className="my-1 mr-4">{ Balances ? "Ξ" + toFixed(formatEther(Balances[0]), 5) : "-" }</span>
                             </div>
                         )
                     )

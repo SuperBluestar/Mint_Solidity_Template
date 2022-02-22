@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react';
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
 
-export const useContractOwner = (
+export const useBaseUri = (
     contract?: NftMint,
+    account?: string,
     update?: number
 ): string | undefined => {
-    const [ owner, setOwner ] = useState<string | undefined>()
+    const [ baseUri, setBaseUri ] = useState<string | undefined>()
     useEffect(() => {
         if (contract) {
             let stale = false
-            void Promise.all([contract?.owner()]).then(([owner_]) => {
+            void Promise.all([contract?.getBaseUri({ from: account})]).then(([baseUri_]) => {
                 if (!stale) {
-                    setOwner(owner_);
+                    setBaseUri(baseUri_);
                 }
             });
             return () => {
               stale = true
-              setOwner(undefined)
+              setBaseUri(undefined)
             }
         }
     }, [contract, update]);
-    return owner
+    return baseUri
 }

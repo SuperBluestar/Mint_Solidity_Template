@@ -9,12 +9,12 @@ import {
     usePublicSaleTime,
     useCurrentSupply,
     useTotalSupply,
+    useCost
 } from 'hooks';
 import { apiGetAccountNonce } from 'helpers/api';
 import { parseEther } from '@ethersproject/units'
-import { CHAIN_ID, NFT_CONTRACT } from "constant";
-import { ethers } from 'ethers';
-
+import { CHAIN_ID } from "constant";
+import apiService from 'services/apiService';
 
 const Home: FC = () => {
     const connector = useConnector();
@@ -27,6 +27,7 @@ const Home: FC = () => {
     const publicSaleTime = usePublicSaleTime(contract);
     const currentSupply = useCurrentSupply(contract);
     const totalSupply = useTotalSupply(contract);
+    const cost = useCost(contract);
 
     const publicMintHandler = async () => {
         if (Account) {
@@ -36,7 +37,7 @@ const Home: FC = () => {
                 let nftTxn = await contract?.publicMint(1, {
                     // gasPrice: gasPrice.average.price,
                     from: Account,
-                    value: parseEther("0.077").toString(),
+                    value: cost?.toString(),
                     nonce: nonce
                 })
                 await nftTxn?.wait()
@@ -51,16 +52,27 @@ const Home: FC = () => {
         if (Account) {
             // const gasPrice = await apiGetGasPrices();
             const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            const NftContract = new ethers.Contract(NFT_CONTRACT[CHAIN_ID].address, NFT_CONTRACT[CHAIN_ID].abi, provider?.getSigner());
-            let nftTxn = await NftContract?.publicMint(1, {
+            let nftTxn = await contract?.publicMint(1, {
                 // gasPrice: gasPrice.average.price,
                 from: Account,
                 value: parseEther("0.077").toString(),
                 nonce: nonce
             })
-            await nftTxn.wait()
+            await nftTxn?.wait()
     
-            console.log(nftTxn.hash)
+            console.log(nftTxn?.hash)
+        }
+    }
+    const registerWhitelistHandler = async () => {
+        if (Account) {
+            let result = await apiService.registerWalletAddressFree(Account)
+            if (result.success) {
+                alert("registered Successfully");
+            } else {
+                alert(result.content);
+            }
+        } else {
+            alert("Wait few secs");
         }
     }
     return (
@@ -71,10 +83,15 @@ const Home: FC = () => {
             { IsActive && Account ? (
                 <div className="flex flex-col items-center">
                     <div className="my-2 text-2xl animate-pulse">{currentSupply} / {totalSupply}</div>
-                    <div className="flex justify-center">
+                    <div className="grid grid-cols-3 gap-2">
+                        <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition" onClick={preMintHandler}>Pre Mint</button>
                         <input type="number" min={0} max={10} className="rounded-full px-6 py-3 border"/>
-                        <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition mx-3" onClick={preMintHandler}>Pre Mint</button>
                         <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition" onClick={publicMintHandler}>Public Mint</button>
+                    </div>
+                    <div className="w-80 text-center my-4">
+                        <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition" onClick={registerWhitelistHandler}>
+                        Register as whitelist
+                        </button>
                     </div>
                     <div className="flex my-1">
                         <label htmlFor="preSaleTime_id" className="px-4 py-2 font-extrabold w-36 text-right">preSale</label>

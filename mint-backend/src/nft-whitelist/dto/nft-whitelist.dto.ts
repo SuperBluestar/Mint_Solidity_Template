@@ -2,5 +2,5 @@
 
 export class NftWhitelistDto {
   walletAddress: string;
-  allowed: number;
+  allowed?: number;
 }

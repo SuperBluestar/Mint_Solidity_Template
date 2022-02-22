@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 
 export function useBalances(
     provider?: ReturnType<Web3ReactHooks['useProvider']>,
-    accounts?: string[]
+    accounts?: string[],
+    update?: number
   ): BigNumber[] | string[] | undefined {
     const [balances, setBalances] = useState<BigNumber[] | string[] | undefined>()
   
@@ -23,7 +24,7 @@ export function useBalances(
           setBalances(undefined)
         }
       }
-    }, [provider, accounts])
+    }, [provider, accounts, update])
   
     return balances
   }

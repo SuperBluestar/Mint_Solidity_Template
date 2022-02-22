@@ -3,6 +3,8 @@ import { NftWhitelistController } from './nft-whitelist.controller';
 import { NftWhitelistService } from './nft-whitelist.service';
 import { NftWhitelistSchema } from './schemas/nft-whitelist.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'src/roles.guard';
 
 @Module({
   imports: [
@@ -11,6 +13,12 @@ import { MongooseModule } from '@nestjs/mongoose';
     ]),
   ],
   controllers: [NftWhitelistController],
-  providers: [NftWhitelistService],
+  providers: [
+    NftWhitelistService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class NftWhitelistModule {}

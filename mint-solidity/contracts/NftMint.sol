@@ -116,7 +116,7 @@ contract NftMint is ERC721Royalty, Ownable, ReentrancyGuard, Pausable {
     }
     // Owners: BaseExtension
     function getBaseExtension() external onlyOwner view returns (string memory) {
-        return _baseUri;
+        return _baseExtension;
     }
     function setBaseExtension(string memory baseExtension_) external onlyOwner {
         _baseExtension = baseExtension_;

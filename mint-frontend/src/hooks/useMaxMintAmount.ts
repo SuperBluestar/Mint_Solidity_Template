@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
 
-export const useContractOwner = (
+export const useMaxMintAmount = (
     contract?: NftMint,
     update?: number
-): string | undefined => {
-    const [ owner, setOwner ] = useState<string | undefined>()
+): number | undefined => {
+    const [ maxMintAmount, setMaxMintAmount ] = useState<number | undefined>()
     useEffect(() => {
         if (contract) {
             let stale = false
-            void Promise.all([contract?.owner()]).then(([owner_]) => {
+            void Promise.all([contract?.maxMintAmount()]).then(([maxMintAmount_]) => {
                 if (!stale) {
-                    setOwner(owner_);
+                    setMaxMintAmount(maxMintAmount_);
                 }
             });
             return () => {
               stale = true
-              setOwner(undefined)
+              setMaxMintAmount(undefined)
             }
         }
     }, [contract, update]);
-    return owner
+    return maxMintAmount
 }

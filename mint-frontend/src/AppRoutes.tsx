@@ -6,6 +6,9 @@ import Home from "pages/Home"
 import NotFound from "pages/NotFound"
 import Admin from "pages/Admin/Index"; 
 import AdminDashboard from 'pages/Admin/Dashboard';
+import AdminPanel1 from 'pages/Admin/Panel1';
+import AdminPanel2 from 'pages/Admin/Panel2';
+import AdminPanel3 from 'pages/Admin/Panel3';
 
 const AppRoutes = () => {
     const location = useLocation();
@@ -16,6 +19,9 @@ const AppRoutes = () => {
                 <Route path="" element={<Home />} />
                 <Route path="admin" element={<Admin />}>
                     <Route path="" element={<AdminDashboard />} />
+                    <Route path="1" element={<AdminPanel1 />} />
+                    <Route path="2" element={<AdminPanel2 />} />
+                    <Route path="3" element={<AdminPanel3 />} />
                     <Route path="*" element={<Navigate to="" />} />
                 </Route>
                 <Route path="404" element={<NotFound />} />

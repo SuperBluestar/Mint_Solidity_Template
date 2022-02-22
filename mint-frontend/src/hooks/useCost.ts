@@ -1,24 +1,26 @@
+import type { BigNumber } from '@ethersproject/bignumber'
 import { useEffect, useState } from 'react';
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
+import { formatEther } from '@ethersproject/units'
 
-export const useContractOwner = (
+export const useCost = (
     contract?: NftMint,
     update?: number
-): string | undefined => {
-    const [ owner, setOwner ] = useState<string | undefined>()
+): BigNumber | undefined => {
+    const [ cost, setCost ] = useState<BigNumber | undefined>()
     useEffect(() => {
         if (contract) {
             let stale = false
-            void Promise.all([contract?.owner()]).then(([owner_]) => {
+            void Promise.all([contract?.cost()]).then(([cost_]) => {
                 if (!stale) {
-                    setOwner(owner_);
+                    setCost(cost_);
                 }
             });
             return () => {
               stale = true
-              setOwner(undefined)
+              setCost(undefined)
             }
         }
     }, [contract, update]);
-    return owner
+    return cost
 }
