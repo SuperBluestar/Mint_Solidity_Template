@@ -13,6 +13,22 @@ export const apiServer = axios.create({
 
 export default {
     /**
+     * Ping to server
+     */
+    async pingToServer() {
+        try {
+            let result = await apiServer.get("");
+            console.log(result);
+            return {
+                success: true,
+            }
+        } catch(err) {
+            return {
+                success: false,
+            }
+        }
+    },
+    /**
      * Whitelist
      */
     // WRITE

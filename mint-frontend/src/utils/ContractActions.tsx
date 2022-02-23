@@ -69,6 +69,7 @@ export const preMint = async (
     }
 }
 
+// Owner
 export const setBaseExtension = async (
     baseExtension_: string,
     Account?: string,
@@ -198,6 +199,36 @@ export const setNewAssignedId = async (
         const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
         try {
             let nftTxn = await contract?.setNewAssignedId(assignedId_, {
+                // gasPrice: gasPrice.average.price,
+                from: Account,
+                nonce: nonce
+            })
+            await nftTxn?.wait()
+            return {
+                success: true,
+                message: nftTxn?.hash
+            }
+        } catch (err) {
+            return {
+                success: false
+            }
+        }
+    } else {
+        return {
+            success: false
+        }
+    }
+}
+
+export const setPreMintMaxBalance = async (
+    preMintMaxBalance_: string,
+    Account?: string,
+    contract?: NftMint,
+) => {
+    if (Account) {
+        const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
+        try {
+            let nftTxn = await contract?.setPreMintMaxBalance(preMintMaxBalance_, {
                 // gasPrice: gasPrice.average.price,
                 from: Account,
                 nonce: nonce

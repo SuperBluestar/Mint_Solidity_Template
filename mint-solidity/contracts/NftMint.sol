@@ -47,13 +47,13 @@ contract NftMint is ERC721Royalty, Ownable, ReentrancyGuard, Pausable {
     // Public
     function publicMint(uint8 mintAmount_) external nonReentrant payable {
         require(block.timestamp >= _publicSaleTime, "NftMint: not ready to public mint");
-        require(msg.value == _cost, "NftMint: payment is not enough");
+        require(msg.value == _cost * mintAmount_, "NftMint: payment is not enough");
         mint(mintAmount_);
     }
 
     function preMint(uint8 mintAmount_, bytes32[] calldata proof_) external nonReentrant payable {
         require(block.timestamp >= _preSaleTime, "NftMint: not ready to pre mint");
-        require(msg.value == _cost, "NftMint: payment is not enough");
+        require(msg.value == _cost * mintAmount_, "NftMint: payment is not enough");
         require(MerkleProof.verify(proof_, _merkleRoot, MerkleProof._leaf(_msgSender())), "NftMint: address is not on whitelist");
         mint(mintAmount_);
         require(_preMintBalances[_msgSender()] <= _preMintMaxBalance, string(abi.encodePacked("NftMint: Cannot own more than ", _preMintMaxBalance, " NFTs")));
@@ -119,6 +119,7 @@ contract NftMint is ERC721Royalty, Ownable, ReentrancyGuard, Pausable {
         return _baseExtension;
     }
     function setBaseExtension(string memory baseExtension_) external onlyOwner {
+        require(bytes(baseExtension_).length > 0, "NftMint: cannot empty string");
         _baseExtension = baseExtension_;
     }
     // Owners: TotalSupply

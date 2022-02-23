@@ -28,7 +28,7 @@ export function useApiWhitelist(
                 if (whitelist.success) {
                     setWhitelist(whitelist.content);
                 } else {
-                    setWhitelist(whitelist.content);
+                    setWhitelist([]);
                 }
             }
         })
@@ -47,7 +47,7 @@ export function useApiWhitelist(
                 if (count.success) {
                     setTotalCnt(count.content);
                 } else {
-                    setTotalCnt(count.content);
+                    setTotalCnt(undefined);
                 }
             }
         })

@@ -11,7 +11,8 @@ import {
     useNewAssignedId,
     usePreSaleTime,
     usePublicSaleTime,
-    useContractOwner
+    useContractOwner,
+    usePreMintMaxBalance
 } from 'hooks';
 import { formatEther } from '@ethersproject/units'
 import {
@@ -259,6 +260,51 @@ const Panel2 = () => {
                 </button>
             </>
         ), [assignedId])
+    }
+    
+    /**
+     * PreMintMaxBalance
+     */
+    const preMintMaxBalance = usePreMintMaxBalance(contract, update);
+    const _setPreMintMaxBalance = useCallback(async (preMintMaxBalance_: string) => {
+        if (Account) {
+            let res = await setNewAssignedId(preMintMaxBalance_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
+            }
+        }
+    }, [contract, Account]);
+    const preMintMaxBalanceInput = useRef<HTMLInputElement>(null);
+    const [preMintMaxBalanceInputError, setPreMintMaxBalanceInputError] = useState<string>("");
+    const preMintMaxBalanceClickHandler = () => {
+        if (preMintMaxBalanceInput.current?.value === "" || (preMintMaxBalanceInput.current?.value && parseInt(preMintMaxBalanceInput.current?.value) < 0)) {
+            preMintMaxBalanceInput.current.focus();
+            setPreMintMaxBalanceInputError("Invalid value");
+        } else {
+            (async () => {
+                await _setPreMintMaxBalance(preMintMaxBalanceInput.current?.value || "1");
+            })();
+        }
+    }
+    const PreMintMaxBalancePart:FC = () => {
+        return useMemo(() => (
+            <>
+                <label className="text-center md:text-right">Set PreMintMaxBalance</label>
+                <div className="border-b-4 text-center">{ preMintMaxBalance ? preMintMaxBalance : "loading ..." }</div>
+                <input 
+                    ref={preMintMaxBalanceInput} 
+                    type="number" 
+                    onBlur={() => setPreMintMaxBalanceInputError("")}
+                    className={`border-b-4 text-center outline-none border-b-pink-400 active:border-b-pink-700 ${ preMintMaxBalanceInputError !== "" ? "bg-pink-600" : "" }`}
+                ></input>
+                <button onClick={preMintMaxBalanceClickHandler} className="cursor-pointer hover:bg-pink-700 transition rounded-full text-black hover:text-white">
+                    Update
+                </button>
+            </>
+        ), [preMintMaxBalance])
     }
 
     /**

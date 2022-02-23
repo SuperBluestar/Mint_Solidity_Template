@@ -1,4 +1,4 @@
-import { useContext, useCallback, useEffect } from 'react';
+import { useContext, useCallback, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Web3ModalContext } from 'context/web3ModalContext'
@@ -13,7 +13,8 @@ import {
     useProvider, 
     useAccounts, 
     useIsActivating, 
-    useContractOwner 
+    useContractOwner,
+    useApiServerlive
 } from 'hooks';
 import { ellipseAddress, toFixed } from 'helpers/utilities'
 import { formatEther } from '@ethersproject/units'
@@ -26,6 +27,7 @@ import { useApiInWhitelist } from 'hooks';
 import { setAxiosHeader } from 'services/apiService';
 
 const Header = () => {
+    const [update, refresh] = useState<number>(0);
     const { openModal } = useContext(Web3ModalContext);
     const connector = useConnector();
     const provider = useProvider(connector);
@@ -53,6 +55,7 @@ const Header = () => {
     const isPortrait = useMediaQuery({ query: `(max-width: ${md})` });
 
     const inWhitelist = useApiInWhitelist(Account);
+    const serverlive = useApiServerlive(update);
 
     useEffect(() => {
         if (Account && owner && Account === owner) {
@@ -79,11 +82,12 @@ const Header = () => {
                             </div>
                         ) : (
                             <div className={`flex ${ isPortrait ? "flex-col items-end" : "items-center" }`}>
-                                {
-                                    <span className={`w-8 h-8 rounded-full border flex justify-center items-center mr-4 ${ inWhitelist ? "animate-pulse bg-pink-700 text-white" : "bg-pink-300 text-black" }`}>
-                                    W
-                                    </span>
-                                }
+                                <span className={`w-8 h-8 rounded-full border flex justify-center items-center mr-4 cursor-pointer ${ serverlive ? "animate-pulse bg-pink-700 text-white" : "bg-pink-300 text-black hover:animate-pulse" }`} onClick={() => refresh(val => val + 1)}>
+                                { serverlive === undefined ? "~" : "S" }
+                                </span>
+                                <span className={`w-8 h-8 rounded-full border flex justify-center items-center mr-4 ${ inWhitelist ? "animate-pulse bg-pink-700 text-white" : "bg-pink-300 text-black" }`}>
+                                W
+                                </span>
                                 { 
                                     owner === Account ? 
                                     <Link to="/admin"><span className="px-4 py-1 my-1 mr-4 cursor-pointer">Admin</span></Link> : 

@@ -139,7 +139,7 @@ const Panel3 = () => {
                         <label>Cnt/page</label>
                         <input min="2" value={cntperpage} onChange={e => setCntPerPage(parseInt(e.target.value))} className="rounded border outline-none w-12 text-center" type="number"/>
                         <label>Total</label>
-                        <div className="rounded border outline-none w-12 text-center">{ totalCnt }</div>
+                        <div className="rounded border outline-none w-12 text-center">{ totalCnt === undefined ? "~" : totalCnt }</div>
                         <label>Search</label>
                         <input value={search} onChange={e => setSearch(e.target.value)} className="rounded border outline-none w-32 text-center" type="text"/>
                     </div>
