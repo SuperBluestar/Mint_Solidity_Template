@@ -106,7 +106,7 @@ const Home: FC = () => {
                         }
                     </div>
                     <div className="flex my-1">
-                        <label htmlFor="preSaleTime_id" className="px-4 py-2 font-extrabold w-36 text-right">publicSaleTime</label>
+                        <label htmlFor="preSaleTime_id" className="px-4 py-2 font-extrabold w-36 text-right">publicSale</label>
                         { 
                             publicSaleTime ? 
                             <input className="text-center outline-none border-b-4 w-44" id="preSaleTime_id" type="text" readOnly value={publicSaleTime.toLocaleDateString() + " " + publicSaleTime.toLocaleTimeString()} /> : 

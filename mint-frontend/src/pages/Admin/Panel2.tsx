@@ -26,6 +26,7 @@ import {
 } from "utils/ContractActions"
 import DateTimePicker from 'react-datetime-picker';
 import { isAddress } from '@ethersproject/address';
+import { ellipseAddress } from 'helpers/utilities';
 
 const Panel2 = () => {
     const [update, refresh] = useState<number>(0);
@@ -350,7 +351,7 @@ const Panel2 = () => {
     const contractOwner = useContractOwner(contract, update);
     const _setContractOwner = useCallback(async (contractOwner_: string) => {
         if (Account) {
-            if (contractOwner && isAddress(contractOwner_)) {
+            if (contractOwner_ && isAddress(contractOwner_)) {
                 let res = await setContractOwner(contractOwner_, Account, contract);
                 if (res.success) {
                     alert("Tx is done successfully");
@@ -379,7 +380,7 @@ const Panel2 = () => {
         return useMemo(() => (
             <>
                 <label className="text-center md:text-right">Set ContractOwner</label>
-                <div className="border-b-4 text-center">{ contractOwner ? (contractOwner) : "loading ..." }</div>
+                <div className="border-b-4 text-center">{ contractOwner ? ellipseAddress(contractOwner, 7) : "loading ..." }</div>
                 <input 
                     ref={contractOwnerInput} 
                     type="text" 
@@ -387,7 +388,7 @@ const Panel2 = () => {
                     className={`border-b-4 text-center outline-none border-b-pink-400 active:border-b-pink-700 ${ contractOwnerInputError !== "" ? "bg-pink-600" : "" }`}
                 ></input>
                 <button onClick={contractOwnerClickHandler} className="cursor-pointer hover:bg-pink-700 transition rounded-full text-black hover:text-white">
-                    Update
+                    TransferOwnership
                 </button>
             </>
         ), [contractOwner])

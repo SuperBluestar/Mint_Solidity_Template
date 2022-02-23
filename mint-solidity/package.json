@@ -38,6 +38,6 @@
   },
   "scripts": {
     "deploy:hardhat": "npx hardhat run scripts/deploy.ts",
-    "deploy:rinkeby": "npx hardhat run --network rinkeby scripts/deploy.ts"
+    "deploy:rinkeby": "npx hardhat run --network rinkeby scripts/deploy.ts",
   }
 }

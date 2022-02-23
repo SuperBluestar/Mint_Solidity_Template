@@ -16,12 +16,14 @@ async function main() {
   // We get the contract to deploy
 
   const NftMint = await ethers.getContractFactory("NftMint");
-  const nftMint = await NftMint.deploy("TmpName", "TMP", "https://temp-nft.com");
+  const nftMint = await NftMint.deploy("TmpName", "TMP", "http://thejiggys.com/api/jiggy-reveal-img/");
 
   await nftMint.deployed();
 
   console.log("NftMint deployed to:", nftMint.address);
   console.log("NftMint's owner is:", await nftMint.owner());
+
+  console.log("npx hardhat verify --network rinkeby --constructor-args arguments.js " + nftMint.address)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

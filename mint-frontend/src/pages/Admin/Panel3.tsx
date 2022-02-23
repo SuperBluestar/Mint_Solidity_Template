@@ -108,7 +108,7 @@ const Panel3 = () => {
             <div className="flex flex-col md:flex-row mb-2">
                 <label className="flex-shrink-0 flex-grow-0 flex items-center justify-center">Contract MerkleRoot</label>
                 <div className="flex-shrink-0 flex-grow-0 border-b-2 mx-2 px-2 flex items-center justify-center">{ contractMerkleRoot ? ellipseAddress(contractMerkleRoot, 5) : "Loading" }</div>
-                <div className="flex-shrink flex-grow border-b-2 mx-2 px-2 text-center">{ _merkleRoot_ ? `${ellipseAddress(_merkleRoot_.merkleroot, 5)}\n(updated at ${new Date(_merkleRoot_.createdAt).toLocaleString("en-US", { timeZone: TimeZone })})` : "~~" }</div>
+                <div className="flex-shrink flex-grow border-b-2 mx-2 px-2 text-center">{ _merkleRoot_ ? `0x${ellipseAddress(_merkleRoot_.merkleroot, 5)}\n(updated at ${new Date(_merkleRoot_.createdAt).toLocaleString("en-US", { timeZone: TimeZone })})` : "~~" }</div>
                 <div className="flex-shrink-0 flex-grow-0 px-3 py-1 border-b-2 bg-pink-400 hover:bg-pink-700 hover:text-white cursor-pointer flex items-center justify-center" onClick={getMerkleRoot}>GET</div>
                 <div className="flex-shrink-0 flex-grow-0 px-3 py-1 border-b-2 bg-pink-400 hover:bg-pink-700 hover:text-white cursor-pointer flex items-center justify-center" onClick={calculateMerkleRoot}>CALCULATE</div>
                 <div className="flex-shrink-0 flex-grow-0 px-3 py-1 border-b-2 bg-pink-400 hover:bg-pink-700 hover:text-white cursor-pointer flex items-center justify-center" onClick={() => _merkleRoot_ ? _setMerkleRoot(_merkleRoot_.merkleroot) : alert("please get merkleroot from server")}>UPDATE</div>
