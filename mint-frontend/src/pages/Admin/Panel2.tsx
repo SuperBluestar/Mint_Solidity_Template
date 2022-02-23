@@ -458,6 +458,9 @@ const Panel2 = () => {
                 <AssignedIdPart />
             </div>
             <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
+                <PreMintMaxBalancePart />
+            </div>
+            <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
                 <PreSaleTimePart />
             </div>
             <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
