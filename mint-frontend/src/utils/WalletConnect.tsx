@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
 import { IconButton } from 'components/atoms/IconButton';
 import { MetaMask as MetaMaskIcon, WalletConnect as WalletConnectIcon, WalletLink as WalletLinkIcon, Network as NetworkIcon } from 'components/icons';
-import type { Web3ReactHooks } from '@web3-react/core'
-import { MetaMask } from '@web3-react/metamask'
-import { WalletLink } from '@web3-react/walletlink'
+import type { Web3ReactHooks } from '@web3-react/core';
+import { MetaMask } from '@web3-react/metamask';
+import { WalletLink } from '@web3-react/walletlink';
 
-import { WalletConnect } from '@web3-react/walletconnect'
-import { Network } from '@web3-react/network'
-import { getAddChainParameters } from "chains"
+import { WalletConnect } from '@web3-react/walletconnect';
+import { Network } from '@web3-react/network';
+import { getAddChainParameters } from "chains";
 import { CHAIN_ID } from '../constant';
 import { Connector } from '@web3-react/types';
 

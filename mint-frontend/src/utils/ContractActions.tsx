@@ -1,8 +1,7 @@
 import { CHAIN_ID } from "constant";
 import { apiGetAccountNonce } from 'helpers/api';
-import { parseEther } from '@ethersproject/units'
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
-import type { BigNumber } from '@ethersproject/bignumber'
+import type { BigNumber } from '@ethersproject/bignumber';
 
 export const publicMint = async (
     cnt: number,
