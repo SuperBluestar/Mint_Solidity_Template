@@ -9,44 +9,108 @@ import {
     HttpException,
     UsePipes,
     SetMetadata,
-    BadRequestException,
-  } from '@nestjs/common';
-  import { NftWhitelistService } from './nft-whitelist.service';
-  import { NftWhitelistDto } from './dto/nft-whitelist.dto';
-  import { RegisterWalletValidationPipe } from "./validation/walletAddressValidation.pipe";
-  import { ADMIN, MANAGER, FREE } from "src/roles.guard";
-  import {
-    isAddress,
-  } from "@ethersproject/address";
+} from '@nestjs/common';
+import { NftWhitelistService } from './nft-whitelist.service';
+import { NftWhitelistDto, NftWhitelistDtos } from './dto/nft-whitelist.dto';
+import { RegisterWalletValidationPipe } from "./validation/walletAddressValidation.pipe";
+import { ADMIN, MANAGER } from "src/roles.guard";
+import { isAddress } from "@ethersproject/address";
 
-  @Controller('nft-whitelist')
-  export class NftWhitelistController {
+@Controller('nft-whitelist')
+export class NftWhitelistController {
     constructor(private nftWhitelistService: NftWhitelistService) {}
   
-    @UsePipes(RegisterWalletValidationPipe)
     @Post()
     @SetMetadata('roles', [ ADMIN, MANAGER ])
-    async registerWalletAddress(@Body() nftWhitelistDto: NftWhitelistDto) {
-      const duplicated = await this.nftWhitelistService.findOne(
-        nftWhitelistDto,
-      );
-      if (!duplicated) {
-        this.nftWhitelistService.registerWalletAddress(nftWhitelistDto);
-        return {
-          status: HttpStatus.CREATED,
-          message: 'wallet address is registered successfully',
-        };
-      } else {
-        throw new HttpException(
-          {
-            status: HttpStatus.CONFLICT,
-            message: 'wallet address already taken',
-          },
-          HttpStatus.CONFLICT,
-        );
+    async registerWalletAddresses(@Body() nftWhitelistDtos: NftWhitelistDtos) {
+      let result = {
+        success: 0,
+        failed: 0,
+      };
+      for (let nftWhitelistDto of nftWhitelistDtos.NftWhitelistDtos) {
+        if (isAddress(nftWhitelistDto.walletAddress)) {
+          const duplicated = await this.nftWhitelistService.findOne(
+            nftWhitelistDto,
+          );
+          if (!duplicated) {
+            try {
+              await this.nftWhitelistService.registerWalletAddress(nftWhitelistDto);
+              result.success ++;
+            } catch(e) {
+              result.failed ++;
+            }
+          } else {
+            result.failed ++;
+          }
+        } else {
+          result.failed ++;
+        }
+      }
+      return {
+        status: HttpStatus.OK,
+        message: result
       }
     }
 
+    @Post("remove")
+    @SetMetadata('roles', [ ADMIN, MANAGER ])
+    async removeWalletAddresses(@Body() nftWhitelistDtos: NftWhitelistDtos) {
+      let result = {
+        success: 0,
+        failed: 0,
+      };
+      for (let nftWhitelistDto of nftWhitelistDtos.NftWhitelistDtos) {
+        const existing = await this.nftWhitelistService.findOne(
+          nftWhitelistDto,
+        );
+        if (existing) {
+          let res;
+          try {
+            res = await this.nftWhitelistService.removeWalletAddress(nftWhitelistDto);
+            result.success ++;
+          } catch(e) {
+            result.success --;
+          }
+        } else {
+          result.failed ++;
+        }
+      }
+      return {
+        status: HttpStatus.OK,
+        message: result
+      }
+    }
+    
+    @Post("force-remove")
+    @SetMetadata('roles', [ ADMIN, MANAGER ])
+    async forceRemoveWalletAddresses(@Body() nftWhitelistDtos: NftWhitelistDtos) {
+      let result = {
+        success: 0,
+        failed: 0,
+      };
+      for (let nftWhitelistDto of nftWhitelistDtos.NftWhitelistDtos) {
+        const existing = await this.nftWhitelistService.findOne(
+          nftWhitelistDto,
+        );
+        if (existing) {
+          let res;
+          try {
+            res = await this.nftWhitelistService.forceRemoveWalletAddress(nftWhitelistDto);
+            result.success ++;
+          } catch(e) {
+            result.failed ++;
+          }
+        } else {
+          result.failed ++;
+        }
+      }
+      return {
+        status: HttpStatus.OK,
+        message: result
+      }
+    }
+
+    @UsePipes(RegisterWalletValidationPipe)
     @Post("free")
     async registerWalletAddressFree(@Body() nftWhitelistDto: NftWhitelistDto) {
       if (await this.nftWhitelistService.count() >= parseInt(process.env.FREE_REGISTER_LIMIT)) {
@@ -58,40 +122,51 @@ import {
           HttpStatus.NOT_ACCEPTABLE,
         );
       } else {
-        if (isAddress(nftWhitelistDto.walletAddress)) {
-          const duplicated = await this.nftWhitelistService.findOne(
-            nftWhitelistDto,
-          );
-          if (!duplicated) {
-            this.nftWhitelistService.registerWalletAddress(nftWhitelistDto);
+        const duplicated = await this.nftWhitelistService.findOne(
+          nftWhitelistDto,
+        );
+        if (!duplicated) {
+          try {
+            await this.nftWhitelistService.registerWalletAddress(nftWhitelistDto);
             return {
               status: HttpStatus.CREATED,
               message: 'wallet address is registered successfully',
             };
-          } else {
+          } catch(e) {
             throw new HttpException(
               {
-                status: HttpStatus.CONFLICT,
-                message: 'wallet address already taken',
+                status: HttpStatus.TOO_MANY_REQUESTS,
+                message: 'failed to register',
               },
               HttpStatus.CONFLICT,
             );
           }
         } else {
-          throw new BadRequestException({ walletAddress: 'invalid address' }, "Invalid parameter");
+          throw new HttpException(
+            {
+              status: HttpStatus.CONFLICT,
+              message: 'wallet address already taken',
+            },
+            HttpStatus.CONFLICT,
+          );
         }
       }
     }
 
-    @Get()
+    @Get("count")
     @SetMetadata('roles', [ ADMIN, MANAGER ])
-    async findAll() {
-      const walletList = await this.nftWhitelistService.findAll();
-      return {
-        status: HttpStatus.OK,
-        message: walletList.map(data => ({
-          walletAddress: data.walletAddress
-        }))
+    async findAllCount() {
+      try {
+        const cnt = await this.nftWhitelistService.count();
+        return {
+          status: HttpStatus.OK,
+          message: cnt
+        }
+      } catch(e) {
+        return {
+          status: HttpStatus.TOO_MANY_REQUESTS,
+          message: -1
+        }
       }
     }
 
@@ -101,19 +176,27 @@ import {
       page = page === undefined ? 1 : page;
       cntperpage = cntperpage === undefined ? 50 : cntperpage;
       search = search === undefined ? "" : search;
-      const walletList = await this.nftWhitelistService.findByPaginate(page, cntperpage, search);
-      return {
-        status: HttpStatus.OK,
-        message: walletList.map(data => ({
-          walletAddress: data.walletAddress
-        }))
+      try {
+        const walletList = await this.nftWhitelistService.findByPaginate(page, cntperpage, search);
+        return {
+          status: HttpStatus.OK,
+          message: walletList.map(data => ({
+            walletAddress: data.walletAddress,
+            allowed: data.allowed
+          }))
+        }
+      } catch(e) {
+        return {
+          status: HttpStatus.TOO_MANY_REQUESTS,
+          message: []
+        }
       }
     }
 
     @Get("free-:walletAddress")
     async findByWalletAddress(@Param('walletAddress') walletAddress: string) {
       const data = await this.nftWhitelistService.findByWalletAddress(walletAddress);
-      if (data) {
+      if (data && data.allowed > 0) {
         return {
           status: HttpStatus.OK,
           message: data
@@ -128,5 +211,5 @@ import {
         );
       }
     }
-  }
+}
   

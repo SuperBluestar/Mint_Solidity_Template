@@ -37,7 +37,7 @@ export class NftWhitelistService {
 
   async findByWalletAddress(payload: string): Promise<INftWhitelist> {
     return await this.nftWhitelistModel.findOne({
-      walletAddress: payload
+      walletAddress: payload,
     })
   }
 
@@ -60,5 +60,28 @@ export class NftWhitelistService {
 
   async count(): Promise<number> {
     return await this.nftWhitelistModel.count();
+  }
+
+  /**
+   * Delete
+   */
+  async removeWalletAddress(nftWhitelistDto: NftWhitelistDto): Promise<any> {
+    return await this.nftWhitelistModel.updateMany(
+      {
+        "walletAddress": nftWhitelistDto.walletAddress
+      }, {
+        "$set": {
+          "walletAddress": nftWhitelistDto.walletAddress,
+          "allowed": 0
+        }
+      }
+    );
+  }
+  async forceRemoveWalletAddress(nftWhitelistDto: NftWhitelistDto): Promise<any> {
+    return await this.nftWhitelistModel.remove(
+      {
+        "walletAddress": nftWhitelistDto.walletAddress
+      }
+    );
   }
 }

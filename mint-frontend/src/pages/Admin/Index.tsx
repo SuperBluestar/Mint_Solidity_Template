@@ -33,23 +33,25 @@ const Index = () => {
     const isPortrait = useMediaQuery({ query: `(max-width: ${md})` });
     const [openedSidebar, setOpenedSidebar] = useState<Boolean>(!isPortrait);
     return (
-        <div className="mx-auto md:container">
+        <div className="w-full ml-0 md:mx-auto md:container overflow-x-hidden">
             <h3 className="w-full text-center text-4xl font-extrabold uppercase py-4 animate-pulse">👨‍🎓Admin👨‍🎓 Page</h3>
-            <div className="w-full flex justify-center">
+            <div className="w-fit md:w-full flex justify-center">
             { 
                 loading ? 
-                <div className="w-full h-96 flex justify-center items-center">
+                <div className="w-screen h-96 flex justify-center items-center">
                     <Loader />
                 </div> : 
                 <>
-                    <aside className={`flex-shrink-0 flex-grow-0 transition-all ${openedSidebar ? "w-64" : "w-20"} h-96`}>
+                    <aside className={`flex-shrink-0 flex-grow-0 transition-all ${openedSidebar ? "w-64" : "w-20"}`}>
                         <LeftSidebar 
                             openedSidebar={openedSidebar}
                             openHandler={() => setOpenedSidebar(true)} 
                             closeHandler={() => setOpenedSidebar(false)}
                         />
                     </aside>
-                    <section className="flex-shrink flex-grow py-4 px-2 md:px-10">
+                    <section className="flex-shrink flex-grow py-4 px-2 md:px-10 min-h-screen" style={{
+                        width: "calc(100vw - 80px)",
+                    }}>
                         <Outlet /> 
                     </section>
                 </>

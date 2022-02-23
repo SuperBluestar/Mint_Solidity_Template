@@ -1,25 +1,26 @@
-import type { BigNumber } from '@ethersproject/bignumber'
 import { useEffect, useState } from 'react';
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
+import type { BigNumber } from '@ethersproject/bignumber'
 
-export const useCost = (
+export const useContractBalance = (
     contract?: NftMint,
+    account?: string,
     update?: number
 ): BigNumber | undefined => {
-    const [ cost, setCost ] = useState<BigNumber | undefined>()
+    const [ contractBalance, setContractBalance ] = useState<BigNumber | undefined>()
     useEffect(() => {
         if (contract) {
             let stale = false
-            void Promise.all([contract?.cost()]).then(([cost_]) => {
+            void Promise.all([contract?.balance({ from: account})]).then(([balance_]) => {
                 if (!stale) {
-                    setCost(cost_);
+                    setContractBalance(balance_);
                 }
             });
             return () => {
               stale = true
-              setCost(undefined)
+              setContractBalance(undefined)
             }
         }
     }, [contract, update]);
-    return cost
+    return contractBalance
 }

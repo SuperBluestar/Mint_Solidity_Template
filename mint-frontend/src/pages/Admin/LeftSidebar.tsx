@@ -12,10 +12,10 @@ const LeftSidebar = ({
     closeHandler
 }: ILeftSidebar) => {
     return (
-        <div className="w-full h-full border-r-2 p-4 relative flex flex-col items-start">
+        <div className="w-full h-full border-r-2 p-4 relative flex flex-col items-start ">
             {/* <div className="w-full p-4">H</div> */}
             <div 
-                className={`${openedSidebar ? "absolute left-full top-4" : "w-full"} transition cursor-pointer border rounded px-2 py-1 flex justify-center items-center`}
+                className={`${openedSidebar ? "absolute left-full -translate-x-2/4 top-0" : "w-full"} transition cursor-pointer border rounded px-2 py-1 flex justify-center items-center bg-white z-50`}
                 onClick={openedSidebar ? closeHandler : openHandler}
             >{ openedSidebar ? "<<" : ">>" }</div>
             <Link to="1" className={`w-full mt-2 rounded-md border px-2 py-1 cursor-pointer ${ openedSidebar ? "" : "text-center" }`}>

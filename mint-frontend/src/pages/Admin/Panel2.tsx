@@ -7,14 +7,28 @@ import {
     useBaseExtension,
     useBaseUri,
     useMaxMintAmount,
-    useCost
+    useCost,
+    useNewAssignedId,
+    usePreSaleTime,
+    usePublicSaleTime,
+    useContractOwner
 } from 'hooks';
-import { apiGetAccountNonce } from 'helpers/api';
-import { formatEther, parseEther } from '@ethersproject/units'
-import { CHAIN_ID } from "constant";
+import { formatEther } from '@ethersproject/units'
+import {
+    setBaseExtension,
+    setBaseUri,
+    setMaxMintAmount,
+    setCost,
+    setNewAssignedId,
+    setPreSaleTime,
+    setPublicSaleTime,
+    setContractOwner
+} from "utils/ContractActions"
+import DateTimePicker from 'react-datetime-picker';
+import { isAddress } from '@ethersproject/address';
 
 const Panel2 = () => {
-    const [update, refresh] = useState(0);
+    const [update, refresh] = useState<number>(0);
 
     const connector = useConnector();
     const Account = useAccount(connector);
@@ -25,21 +39,14 @@ const Panel2 = () => {
      * BaseExtension
      */
     const baseExtension = useBaseExtension(contract, Account, update);
-    const setBaseExtension = useCallback(async (baseExtension_: string) => {
+    const _setBaseExtension = useCallback(async (baseExtension_: string) => {
         if (Account) {
-            // const gasPrice = await apiGetGasPrices();
-            const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            try {
-                let nftTxn = await contract?.setBaseExtension(baseExtension_, {
-                    // gasPrice: gasPrice.average.price,
-                    from: Account,
-                    nonce: nonce
-                })
-                await nftTxn?.wait()
-        
-                console.log(nftTxn?.hash)
-            } catch (err) {
-                console.log(err)
+            let res = await setBaseExtension(baseExtension_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
             }
         }
     }, [contract, Account]);
@@ -51,7 +58,7 @@ const Panel2 = () => {
             setBaseExtensionInputError("Invalid value");
         } else {
             (async () => {
-                await setBaseExtension(baseExtensionInput.current?.value || "");
+                await _setBaseExtension(baseExtensionInput.current?.value || "");
             })();
         }
     }
@@ -77,21 +84,14 @@ const Panel2 = () => {
      * BaseUri
      */
     const baseUri = useBaseUri(contract, Account, update);
-    const setBaseUrl = useCallback(async (baseUri_: string) => {
+    const _setBaseUrl = useCallback(async (baseUri_: string) => {
         if (Account) {
-            // const gasPrice = await apiGetGasPrices();
-            const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            try {
-                let nftTxn = await contract?.setBaseUri(baseUri_, {
-                    // gasPrice: gasPrice.average.price,
-                    from: Account,
-                    nonce: nonce
-                })
-                await nftTxn?.wait()
-        
-                console.log(nftTxn?.hash)
-            } catch (err) {
-                console.log(err)
+            let res = await setBaseUri(baseUri_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
             }
         }
     }, [contract, Account]);
@@ -103,7 +103,7 @@ const Panel2 = () => {
             setBaseUriInputError("Invalid value");
         } else {
             (async () => {
-                await setBaseUrl(baseUriInput.current?.value || "");
+                await _setBaseUrl(baseUriInput.current?.value || "");
             })();
         }
     }
@@ -129,21 +129,14 @@ const Panel2 = () => {
      * MaxMintAmount
      */
     const maxMintAmount = useMaxMintAmount(contract, update);
-    const setMaxMintAmount = useCallback(async (maxMintAmount_: string) => {
+    const _setMaxMintAmount = useCallback(async (maxMintAmount_: string) => {
         if (Account) {
-            // const gasPrice = await apiGetGasPrices();
-            const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            try {
-                let nftTxn = await contract?.setMaxMintAmount(maxMintAmount_, {
-                    // gasPrice: gasPrice.average.price,
-                    from: Account,
-                    nonce: nonce
-                })
-                await nftTxn?.wait()
-        
-                console.log(nftTxn?.hash)
-            } catch (err) {
-                console.log(err)
+            let res = await setMaxMintAmount(maxMintAmount_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
             }
         }
     }, [contract, Account]);
@@ -155,7 +148,7 @@ const Panel2 = () => {
             setMaxMintAmountInputError("Invalid value");
         } else {
             (async () => {
-                await setMaxMintAmount(maxMintAmountInput.current?.value || "1");
+                await _setMaxMintAmount(maxMintAmountInput.current?.value || "1");
             })();
         }
     }
@@ -181,21 +174,14 @@ const Panel2 = () => {
      * Cost
      */
     const cost = useCost(contract, update);
-    const setCost = useCallback(async (cost_: string) => {
+    const _setCost = useCallback(async (cost_: string) => {
         if (Account) {
-            // const gasPrice = await apiGetGasPrices();
-            const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            try {
-                let nftTxn = await contract?.setCost(parseEther(cost_), {
-                    // gasPrice: gasPrice.average.price,
-                    from: Account,
-                    nonce: nonce
-                })
-                await nftTxn?.wait()
-        
-                console.log(nftTxn?.hash)
-            } catch (err) {
-                console.log(err)
+            let res = await setCost(cost_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
             }
         }
     }, [contract, Account]);
@@ -207,7 +193,7 @@ const Panel2 = () => {
             setCostInputError("Invalid value");
         } else {
             (async () => {
-                await setCost(costInput.current?.value || "1");
+                await _setCost(costInput.current?.value || "1");
             })();
         }
     }
@@ -228,6 +214,184 @@ const Panel2 = () => {
             </>
         ), [cost])
     }
+
+    /**
+     * NewAssignedId
+     */
+    const assignedId = useNewAssignedId(contract, update);
+    const _setAssignedId = useCallback(async (assignedId_: string) => {
+        if (Account) {
+            let res = await setNewAssignedId(assignedId_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
+            }
+        }
+    }, [contract, Account]);
+    const assignedIdInput = useRef<HTMLInputElement>(null);
+    const [assignedIdInputError, setAssignedIdInputError] = useState<string>("");
+    const assignedIdClickHandler = () => {
+        if (assignedIdInput.current?.value === "" || (assignedIdInput.current?.value && parseInt(assignedIdInput.current?.value) < 0)) {
+            assignedIdInput.current.focus();
+            setAssignedIdInputError("Invalid value");
+        } else {
+            (async () => {
+                await _setAssignedId(assignedIdInput.current?.value || "1");
+            })();
+        }
+    }
+    const AssignedIdPart:FC = () => {
+        return useMemo(() => (
+            <>
+                <label className="text-center md:text-right">Set AssignedId</label>
+                <div className="border-b-4 text-center">{ assignedId || assignedId === false ? assignedId : "loading ..." }</div>
+                <input 
+                    ref={assignedIdInput} 
+                    type="number" 
+                    onBlur={() => setAssignedIdInputError("")}
+                    className={`border-b-4 text-center outline-none border-b-pink-400 active:border-b-pink-700 ${ assignedIdInputError !== "" ? "bg-pink-600" : "" }`}
+                ></input>
+                <button onClick={assignedIdClickHandler} className="cursor-pointer hover:bg-pink-700 transition rounded-full text-black hover:text-white">
+                    Update
+                </button>
+            </>
+        ), [assignedId])
+    }
+
+    /**
+     * Presale
+     */
+    const preSaleTime = usePreSaleTime(contract, update);
+    const _setPreSaleTime = useCallback(async (preSaleTime_: Date) => {
+        if (Account) {
+            let res = await setPreSaleTime(preSaleTime_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
+            }
+        }
+    }, [contract, Account]);
+    const [_preSaleTime_, _setPreSaleTime_] = useState<Date>();
+    const preSaleTimeClickHandler = () => {
+        if (_preSaleTime_) {
+            (async () => {
+                await _setPreSaleTime(_preSaleTime_);
+            })();
+        }
+    }
+    const PreSaleTimePart:FC = () => {
+        return useMemo(() => (
+            <>
+                <label className="text-center md:text-right">Set PreSaleTime</label>
+                <div className="border-b-4 text-center">{ preSaleTime ? preSaleTime.toLocaleDateString() + " " + preSaleTime.toLocaleTimeString() : "loading ..." }</div>
+                <DateTimePicker
+                    className={`text-center outline-none border-b-pink-400 active:border-b-pink-700`}
+                    value={_preSaleTime_}
+                    onChange={(newValue) => {
+                        _setPreSaleTime_(newValue);
+                    }}
+                />
+                <button onClick={preSaleTimeClickHandler} className="cursor-pointer hover:bg-pink-700 transition rounded-full text-black hover:text-white">
+                    Update
+                </button>
+            </>
+        ), [preSaleTime])
+    }
+
+    /**
+     * Publicsale
+     */
+    const publicSaleTime = usePublicSaleTime(contract, update);
+    const _setPublicSaleTime = useCallback(async (publicSaleTime_: Date) => {
+        if (Account) {
+            let res = await setPublicSaleTime(publicSaleTime_, Account, contract);
+            if (res.success) {
+                alert("Tx is done successfully");
+                refresh(val => val + 1);
+            } else {
+                alert("Failed to Tx");
+            }
+        }
+    }, [contract, Account]);
+    const [_publicSaleTime_, _setPublicSaleTime_] = useState<Date>();
+    const publicSaleTimeClickHandler = () => {
+        if (_publicSaleTime_) {
+            (async () => {
+                await _setPublicSaleTime(_publicSaleTime_);
+            })();
+        }
+    }
+    const PublicSaleTimePart:FC = () => {
+        return useMemo(() => (
+            <>
+                <label className="text-center md:text-right">Set PublicSaleTime</label>
+                <div className="border-b-4 text-center">{ publicSaleTime ? publicSaleTime.toLocaleDateString() + " " + publicSaleTime.toLocaleTimeString() : "loading ..." }</div>
+                <DateTimePicker
+                    className={`text-center outline-none border-b-pink-400 active:border-b-pink-700`}
+                    value={_publicSaleTime_}
+                    onChange={(newValue) => {
+                        _setPublicSaleTime_(newValue);
+                    }}
+                />
+                <button onClick={publicSaleTimeClickHandler} className="cursor-pointer hover:bg-pink-700 transition rounded-full text-black hover:text-white">
+                    Update
+                </button>
+            </>
+        ), [publicSaleTime])
+    }
+
+    /**
+     * TransferOwnership
+     */
+    const contractOwner = useContractOwner(contract, update);
+    const _setContractOwner = useCallback(async (contractOwner_: string) => {
+        if (Account) {
+            if (contractOwner && isAddress(contractOwner_)) {
+                let res = await setContractOwner(contractOwner_, Account, contract);
+                if (res.success) {
+                    alert("Tx is done successfully");
+                    refresh(val => val + 1);
+                } else {
+                    alert("Failed to Tx");
+                }
+            } else {
+                alert("Invalid wallet address");
+            }
+        }
+    }, [contract, Account]);
+    const contractOwnerInput = useRef<HTMLInputElement>(null);
+    const [contractOwnerInputError, setContractOwnerInputError] = useState<string>("");
+    const contractOwnerClickHandler = () => {
+        if (contractOwnerInput.current?.value === "" || (contractOwnerInput.current?.value && parseInt(contractOwnerInput.current?.value) < 0)) {
+            contractOwnerInput.current.focus();
+            setContractOwnerInputError("Invalid value");
+        } else {
+            (async () => {
+                await _setContractOwner(contractOwnerInput.current?.value || "");
+            })();
+        }
+    }
+    const ContractOwnerPart:FC = () => {
+        return useMemo(() => (
+            <>
+                <label className="text-center md:text-right">Set ContractOwner</label>
+                <div className="border-b-4 text-center">{ contractOwner ? (contractOwner) : "loading ..." }</div>
+                <input 
+                    ref={contractOwnerInput} 
+                    type="text" 
+                    onBlur={() => setContractOwnerInputError("")}
+                    className={`border-b-4 text-center outline-none border-b-pink-400 active:border-b-pink-700 ${ contractOwnerInputError !== "" ? "bg-pink-600" : "" }`}
+                ></input>
+                <button onClick={contractOwnerClickHandler} className="cursor-pointer hover:bg-pink-700 transition rounded-full text-black hover:text-white">
+                    Update
+                </button>
+            </>
+        ), [contractOwner])
+    }
     return (
         <div className="w-full">
             <div onClick={() => refresh(update => update + 1)} className="text-right cursor-pointer">Refresh</div>
@@ -242,6 +406,18 @@ const Panel2 = () => {
             </div>
             <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
                 <CostPart />
+            </div>
+            <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
+                <AssignedIdPart />
+            </div>
+            <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
+                <PreSaleTimePart />
+            </div>
+            <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
+                <PublicSaleTimePart />
+            </div>
+            <div className="mx-1 mt-2 md:mx-6 rounded-md border p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
+                <ContractOwnerPart />
             </div>
         </div>
     )

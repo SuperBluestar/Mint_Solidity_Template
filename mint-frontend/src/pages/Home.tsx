@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useCallback } from "react";
 import { 
     useAccount, 
     useConnector, 
@@ -9,14 +9,18 @@ import {
     usePublicSaleTime,
     useCurrentSupply,
     useTotalSupply,
-    useCost
+    useCost,
+    useApiInWhitelist
 } from 'hooks';
-import { apiGetAccountNonce } from 'helpers/api';
-import { parseEther } from '@ethersproject/units'
-import { CHAIN_ID } from "constant";
+import { formatEther } from '@ethersproject/units'
 import apiService from 'services/apiService';
+import { 
+    publicMint, 
+    preMint
+} from 'utils/ContractActions';
 
 const Home: FC = () => {
+    const [update, refresh] = useState<number>(0);
     const connector = useConnector();
     const IsActive = useIsActive(connector);
     const Account = useAccount(connector);
@@ -25,51 +29,50 @@ const Home: FC = () => {
     const contract = useNftContract(provider)
     const preSaleTime = usePreSaleTime(contract);
     const publicSaleTime = usePublicSaleTime(contract);
-    const currentSupply = useCurrentSupply(contract);
+    const currentSupply = useCurrentSupply(contract, update);
     const totalSupply = useTotalSupply(contract);
     const cost = useCost(contract);
 
-    const publicMintHandler = async () => {
+    const inWhitelist = useApiInWhitelist(Account, update);
+
+    const [mintCnt, setMintCnt] = useState<number>(1);
+    const publicMintHandler = useCallback(async () => {
         if (Account) {
-            // const gasPrice = await apiGetGasPrices();
-            const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            try {
-                let nftTxn = await contract?.publicMint(1, {
-                    // gasPrice: gasPrice.average.price,
-                    from: Account,
-                    value: cost?.toString(),
-                    nonce: nonce
-                })
-                await nftTxn?.wait()
-        
-                console.log(nftTxn?.hash)
-            } catch (err) {
-                console.log(err)
+            let res = await publicMint(mintCnt, Account, contract, cost);
+            if (res.success) {
+                alert("Tx is done successfully");
+            } else {
+                alert("Failed to Tx");
             }
         }
-    }
-    const preMintHandler = async () => {
+    }, [Account, contract, mintCnt, cost])
+    const preMintHandler = useCallback(async () => {
         if (Account) {
-            // const gasPrice = await apiGetGasPrices();
-            const nonce = await apiGetAccountNonce(Account, CHAIN_ID);
-            let nftTxn = await contract?.publicMint(1, {
-                // gasPrice: gasPrice.average.price,
-                from: Account,
-                value: parseEther("0.077").toString(),
-                nonce: nonce
-            })
-            await nftTxn?.wait()
-    
-            console.log(nftTxn?.hash)
+            let merkleProof = await apiService.getMerkleProof(Account);
+            if (merkleProof.success) {
+                let res = await preMint(mintCnt, merkleProof.content, Account, contract, cost);
+                if (res.success) {
+                    alert("Tx is done successfully");
+                } else {
+                    alert("Failed to Tx");
+                }
+            } else {
+                alert("Failed to get merkle proof");
+            }
         }
-    }
+    }, [Account, contract, mintCnt, cost])
     const registerWhitelistHandler = async () => {
         if (Account) {
-            let result = await apiService.registerWalletAddressFree(Account)
-            if (result.success) {
-                alert("registered Successfully");
+            if ((inWhitelist !== undefined && !inWhitelist)) {
+                let result = await apiService.registerWalletAddressFree(Account)
+                if (result.success) {
+                    alert("registered Successfully");
+                    refresh(val => val + 1)
+                } else {
+                    alert(result.content);
+                }
             } else {
-                alert(result.content);
+                alert("already registered in whitelist")
             }
         } else {
             alert("Wait few secs");
@@ -78,18 +81,19 @@ const Home: FC = () => {
     return (
         <div className="w-full">
             <div className="container mx-auto h-96 flex justify-center items-center">
-                <h3 className="text-9xl animate-bounce shadow-pink-400 shadow-md font-extrabold">NFT Template</h3>
+                <h3 className="text-3xl sm:text-5xl md:text-7xl lg:text-9xl animate-bounce shadow-pink-400 shadow-md font-extrabold">NFT Template</h3>
             </div>
             { IsActive && Account ? (
                 <div className="flex flex-col items-center">
                     <div className="my-2 text-2xl animate-pulse">{currentSupply} / {totalSupply}</div>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="">{ cost ? formatEther(cost) + " Eth" : "loading ..." }</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition" onClick={preMintHandler}>Pre Mint</button>
-                        <input type="number" min={0} max={10} className="rounded-full px-6 py-3 border"/>
+                        <input type="number" value={mintCnt} onChange={e => setMintCnt(parseInt(e.target.value))} min={1} max={10} className="rounded-full px-6 py-3 border"/>
                         <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition" onClick={publicMintHandler}>Public Mint</button>
                     </div>
                     <div className="w-80 text-center my-4">
-                        <button className="rounded-full px-6 py-3 border hover:bg-pink-600 transition" onClick={registerWhitelistHandler}>
+                        <button className={`rounded-full px-6 py-3 border ${ inWhitelist ? "" : "hover:" }bg-pink-600 ${ inWhitelist ? "" : "hover:" }text-white transition`} onClick={registerWhitelistHandler}>
                         Register as whitelist
                         </button>
                     </div>

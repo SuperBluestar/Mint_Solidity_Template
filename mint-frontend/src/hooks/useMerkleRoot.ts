@@ -1,25 +1,25 @@
-import type { BigNumber } from '@ethersproject/bignumber'
 import { useEffect, useState } from 'react';
 import { NftMint } from "../../../mint-solidity/typechain/NftMint";
 
-export const useCost = (
+export const useMerkleRoot = (
     contract?: NftMint,
+    account?: string,
     update?: number
-): BigNumber | undefined => {
-    const [ cost, setCost ] = useState<BigNumber | undefined>()
+): string | undefined => {
+    const [ merkleRoot, setMerkleRoot ] = useState<string | undefined>()
     useEffect(() => {
         if (contract) {
             let stale = false
-            void Promise.all([contract?.cost()]).then(([cost_]) => {
+            void Promise.all([contract?.getMerkleRoot({ from: account})]).then(([merkleRoot_]) => {
                 if (!stale) {
-                    setCost(cost_);
+                    setMerkleRoot(merkleRoot_);
                 }
-            });
+            })
             return () => {
               stale = true
-              setCost(undefined)
+              setMerkleRoot(undefined)
             }
         }
     }, [contract, update]);
-    return cost
+    return merkleRoot
 }

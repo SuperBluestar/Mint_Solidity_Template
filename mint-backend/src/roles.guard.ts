@@ -21,7 +21,6 @@ export class RolesGuard implements CanActivate {
         return true;
     }
     const request = context.switchToHttp().getRequest();
-    console.log(request.headers)
     if (request.headers.requester === process.env.OWNER) {
         return true;
     } else {
