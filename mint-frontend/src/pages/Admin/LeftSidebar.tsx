@@ -24,9 +24,6 @@ const LeftSidebar = ({
             <Link to="2" className={`w-full mt-2 rounded-md border px-2 py-1 cursor-pointer ${ openedSidebar ? "" : "text-center" }`}>
                 🥈 { openedSidebar ? "Owner" : "" }
             </Link>
-            <Link to="3" className={`w-full mt-2 rounded-md border px-2 py-1 cursor-pointer ${ openedSidebar ? "" : "text-center" }`}>
-                🥉 { openedSidebar ? "Backend" : "" }
-            </Link>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 module.exports = [
-    "TmpName",
-    "TMP",
+    "Ukraine Charity NFT",
+    "UCN",
     "http://thejiggys.com/api/jiggy-reveal-img/",
 ];

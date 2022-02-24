@@ -5,7 +5,6 @@ import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { MongooseModule } from '@nestjs/mongoose';
-import { NftWhitelistModule } from './nft-whitelist/nft-whitelist.module';
 
 @Module({
   imports: [
@@ -17,7 +16,6 @@ import { NftWhitelistModule } from './nft-whitelist/nft-whitelist.module';
         cacheControl: true,
       },
     }),
-    NftWhitelistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

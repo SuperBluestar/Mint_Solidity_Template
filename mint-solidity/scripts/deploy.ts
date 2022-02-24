@@ -4,8 +4,12 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
+const args = require('./arguments');
 
 async function main() {
+  const name = args[0] || "TmpName";
+  const symbol = args[1] || "TMP";
+  const baseUri = args[2] || "BaseUri";
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
   //
@@ -16,7 +20,7 @@ async function main() {
   // We get the contract to deploy
 
   const NftMint = await ethers.getContractFactory("NftMint");
-  const nftMint = await NftMint.deploy("TmpName", "TMP", "http://thejiggys.com/api/jiggy-reveal-img/");
+  const nftMint = await NftMint.deploy(name, symbol, baseUri);
 
   await nftMint.deployed();
 

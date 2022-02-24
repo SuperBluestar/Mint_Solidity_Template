@@ -23,7 +23,6 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import { Network } from '@web3-react/network'
 import { getAddChainParameters } from "chains"
 import { useNftContract } from 'hooks';
-import { useApiInWhitelist } from 'hooks';
 import { setAxiosHeader } from 'services/apiService';
 
 const Header = () => {
@@ -54,7 +53,6 @@ const Header = () => {
 
     const isPortrait = useMediaQuery({ query: `(max-width: ${md})` });
 
-    const inWhitelist = useApiInWhitelist(Account);
     const serverlive = useApiServerlive(update);
 
     useEffect(() => {
@@ -84,9 +82,6 @@ const Header = () => {
                             <div className={`flex ${ isPortrait ? "flex-col items-end" : "items-center" }`}>
                                 <span className={`w-8 h-8 rounded-full border flex justify-center items-center mr-4 cursor-pointer ${ serverlive ? "animate-pulse bg-pink-700 text-white" : "bg-pink-300 text-black hover:animate-pulse" }`} onClick={() => refresh(val => val + 1)}>
                                 { serverlive === undefined ? "~" : "S" }
-                                </span>
-                                <span className={`w-8 h-8 rounded-full border flex justify-center items-center mr-4 ${ inWhitelist ? "animate-pulse bg-pink-700 text-white" : "bg-pink-300 text-black" }`}>
-                                W
                                 </span>
                                 { 
                                     owner === Account ? 

@@ -34,7 +34,7 @@ export const DAI_CONTRACT: { [chainId: number]: ContractSetup } = {
 
 export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
   4: {
-    address: "0x8052dFAfd85F1CDA86C9ea2CE2F3799aEb1314EA",
+    address: "0x5E7ab94bdd5A8ebe97Bf0c0f03D8cfA951a1eEcd",
     abi: [
       {
         "inputs": [
@@ -130,19 +130,6 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
         "anonymous": false,
         "inputs": [
           {
-            "indexed": false,
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          }
-        ],
-        "name": "Paused",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
             "indexed": true,
             "internalType": "address",
             "name": "from",
@@ -162,19 +149,6 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
           }
         ],
         "name": "Transfer",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          }
-        ],
-        "name": "Unpaused",
         "type": "event"
       },
       {
@@ -245,9 +219,9 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
         "name": "currentSupply",
         "outputs": [
           {
-            "internalType": "uint16",
+            "internalType": "uint24",
             "name": "",
-            "type": "uint16"
+            "type": "uint24"
           }
         ],
         "stateMutability": "view",
@@ -299,19 +273,6 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "getMerkleRoot",
-        "outputs": [
-          {
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "address",
@@ -337,38 +298,12 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
       },
       {
         "inputs": [],
-        "name": "maxMintAmount",
-        "outputs": [
-          {
-            "internalType": "uint8",
-            "name": "",
-            "type": "uint8"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
         "name": "name",
         "outputs": [
           {
             "internalType": "string",
             "name": "",
             "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "newAssignedId",
-        "outputs": [
-          {
-            "internalType": "uint16",
-            "name": "",
-            "type": "uint16"
           }
         ],
         "stateMutability": "view",
@@ -407,89 +342,6 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "pause",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "paused",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint8",
-            "name": "mintAmount_",
-            "type": "uint8"
-          },
-          {
-            "internalType": "bytes32[]",
-            "name": "proof_",
-            "type": "bytes32[]"
-          }
-        ],
-        "name": "preMint",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "addr",
-            "type": "address"
-          }
-        ],
-        "name": "preMintBalances",
-        "outputs": [
-          {
-            "internalType": "uint16",
-            "name": "",
-            "type": "uint16"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "preMintMaxBalance",
-        "outputs": [
-          {
-            "internalType": "uint16",
-            "name": "",
-            "type": "uint16"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "preSaleTime",
-        "outputs": [
-          {
-            "internalType": "uint40",
-            "name": "",
-            "type": "uint40"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "uint8",
@@ -500,19 +352,6 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
         "name": "publicMint",
         "outputs": [],
         "stateMutability": "payable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "publicSaleTime",
-        "outputs": [
-          {
-            "internalType": "uint40",
-            "name": "",
-            "type": "uint40"
-          }
-        ],
-        "stateMutability": "view",
         "type": "function"
       },
       {
@@ -662,87 +501,9 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
       {
         "inputs": [
           {
-            "internalType": "uint8",
-            "name": "maxMintAmount_",
-            "type": "uint8"
-          }
-        ],
-        "name": "setMaxMintAmount",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "bytes32",
-            "name": "merkleRoot_",
-            "type": "bytes32"
-          }
-        ],
-        "name": "setMerkleRoot",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint16",
-            "name": "newAssignedId_",
-            "type": "uint16"
-          }
-        ],
-        "name": "setNewAssignedId",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint8",
-            "name": "preMintMaxBalance_",
-            "type": "uint8"
-          }
-        ],
-        "name": "setPreMintMaxBalance",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint40",
-            "name": "preSaleTime_",
-            "type": "uint40"
-          }
-        ],
-        "name": "setPreSaleTime",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint40",
-            "name": "publicSaleTime_",
-            "type": "uint40"
-          }
-        ],
-        "name": "setPublicSaleTime",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint16",
+            "internalType": "uint24",
             "name": "totalSupply_",
-            "type": "uint16"
+            "type": "uint24"
           }
         ],
         "name": "setTotalSupply",
@@ -806,9 +567,9 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
         "name": "totalSupply",
         "outputs": [
           {
-            "internalType": "uint16",
+            "internalType": "uint24",
             "name": "",
-            "type": "uint16"
+            "type": "uint24"
           }
         ],
         "stateMutability": "view",
@@ -846,13 +607,6 @@ export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
           }
         ],
         "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "unpause",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
