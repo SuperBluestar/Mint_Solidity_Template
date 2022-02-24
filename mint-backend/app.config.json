@@ -1,0 +1,10 @@
+{
+    "apps": [
+        {
+            "name": "game-mafioso-introduction",
+            "script": "npm run start:prod",
+            "interpreter": "none",
+            "args" : ""
+        }
+    ]
+}
