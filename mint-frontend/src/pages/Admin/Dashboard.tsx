@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
     
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link to="1">
                 <div className="h-24 rounded-md border flex justify-center text-center items-center hover:bg-pink-600 text-black hover:text-white">Contract Status</div>
             </Link>

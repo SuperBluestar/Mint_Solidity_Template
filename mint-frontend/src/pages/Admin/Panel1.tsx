@@ -40,7 +40,7 @@ const Panel1 = () => {
         }
     }, [contract, Account, balance]);
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="h-24 rounded-md border flex justify-center items-center text-3xl">
                 { currentSupply !== undefined ? currentSupply : "~" } / { totalSupply ? totalSupply : "~" }
             </div>
