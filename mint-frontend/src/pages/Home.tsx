@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, useContext } from "react";
+import { FC, useState, useCallback, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Web3ModalContext } from 'context/web3ModalContext';
 import { CHAIN_ID } from 'constant';
@@ -48,9 +48,6 @@ const Home: FC = () => {
             let res = await publicMint(mintCnt, Account, contract, cost);
             if (res.success) {
                 alert("Tx is done successfully");
-                if (closeModal) {
-                    closeModal();
-                }
                 refresh(val => val + 1)
             } else {
                 alert("Failed to Tx");
@@ -70,6 +67,15 @@ const Home: FC = () => {
         },
         [connector, ChainId]
     )
+
+    useEffect(() => {
+        if (!IsActive || getName(connector) === "Network") {}
+        else {
+            if (closeModal) {
+                closeModal();
+            }
+        }
+    }, [IsActive, connector])
     return (
         <>
             <div className="w-full grid grid-cols-1 md:grid-cols-2">
