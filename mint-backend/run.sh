@@ -1,1 +1,1 @@
-pm2 start dist/main.js -i max -n run
+pm2 start dist/main.js -i 10 -n run
