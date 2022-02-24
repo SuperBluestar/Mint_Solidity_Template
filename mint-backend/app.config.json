@@ -4,7 +4,9 @@
             "name": "game-mafioso-introduction",
             "script": "npm run start:prod",
             "interpreter": "none",
-            "args" : " -i 10 -n run"
+            "args" : "",
+            "instances" : "max",
+            "exec_mode" : "cluster"
         }
     ]
 }
