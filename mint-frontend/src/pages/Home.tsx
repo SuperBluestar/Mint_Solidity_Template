@@ -10,7 +10,7 @@ import {
     useProvider, 
     useNftContract,
     useCurrentSupply,
-    useTotalSupply,
+    useContractBalance,
     useCost,
     useChainId,
     useContractOwner
@@ -35,6 +35,7 @@ const Home: FC = () => {
     const provider = useProvider(connector);
 
     const contract = useNftContract(provider);
+    const balance = useContractBalance(contract);
     const owner = useContractOwner(contract);
     const currentSupply = useCurrentSupply(contract, update);
     const cost = useCost(contract);
@@ -109,27 +110,41 @@ const Home: FC = () => {
                         <h2 className="text-ukraine-light-black text-3xl md:text-6xl font-bold">Mint an NFT to Support Ukraine</h2>
                         <p className="text-black my-8" style={{ maxWidth: "450px" }}>100% of Proceeds will go to a Charity for Familes and Infratuture in Ukraine. Charity Foundation will be choosen by a vote from the NFT Holders.</p>
                         <hr className="border-b-black border-opacity-5"/>
-                        { IsActive && Account ? (
-                            <>
-                                <div className="flex flex-wrap">
-                                    <div className="flex py-6 mr-4">
-                                        <span className="font-extrabold mr-1">Supply: </span>
-                                        <span className="font-normal">Unlimited</span>
-                                    </div>
-                                    <div className="flex py-6 mr-4">
-                                        <span className="font-extrabold mr-1">Amt Minted: </span>
-                                        <span className="font-bold">{ currentSupply === undefined ? "~" : currentSupply }</span>
-                                    </div>
-                                    <div className="flex py-6">
-                                        <span className="font-extrabold mr-1">ETH Raised: </span>
-                                        <span className="font-bold">10</span>
-                                    </div>
+                            <div className="flex flex-wrap">
+                                <div className="flex py-6 mr-4">
+                                    <span className="font-extrabold mr-1">Supply: </span>
+                                    <span className="font-normal">Unlimited</span>
                                 </div>
-                                <div className="flex">
-                                    <input style={{ minWidth: "184px" }} type="number" value={mintCnt} onChange={e => setMintCnt(parseInt(e.target.value))} min={1} max={10} className="rounded-full px-6 py-3 border mr-6 h-14 flex items-center"/>
-                                    <button disabled={minting} style={{ minWidth: "146px" }} className="rounded-full px-6 py-3 border bg-ukraine-blue text-white h-14 flex items-center justify-center" onClick={publicMintHandler}>{minting ? "Minting" : "Mint"}</button>
+                                <div className="flex py-6 mr-4">
+                                    <span className="font-extrabold mr-1">Amt Minted: </span>
+                                    <span className="font-bold">{ currentSupply === undefined ? "~" : currentSupply }</span>
                                 </div>
-                            </>) : <></> }
+                                <div className="flex py-6">
+                                    <span className="font-extrabold mr-1">ETH Raised: </span>
+                                    <span className="font-bold">{ balance !== undefined ? formatEther(balance.toString()) : "~" }</span>
+                                </div>
+                            </div>
+                            <div className="flex">
+                                <input style={{ minWidth: "184px" }} type="number" value={mintCnt} onChange={e => setMintCnt(parseInt(e.target.value))} min={1} max={10} className="rounded-full px-6 py-3 border mr-6 h-14 flex items-center"/>
+                                { !IsActive || getName(connector) === "Network" ? 
+                                    <div className="rounded-full px-6 py-3 border bg-ukraine-blue text-white h-14 flex items-center justify-center" onClick={openModal}>
+                                        Connect Wallet
+                                    </div> : (
+                                        IsActivating ? (
+                                            <div className="rounded-full px-6 py-3 border bg-ukraine-blue text-white h-14 flex items-center justify-center">
+                                                Connecting
+                                            </div>
+                                        ) : (
+                                            ChainId !== CHAIN_ID ? (
+                                                <div className="rounded-full px-6 py-3 border bg-ukraine-blue text-white h-14 flex items-center justify-center" onClick={() => switchChain(CHAIN_ID)}>
+                                                    Switch Network
+                                                </div>
+                                            ) : (
+                                                <button disabled={minting} style={{ minWidth: "146px" }} className="rounded-full px-6 py-3 border bg-ukraine-blue text-white h-14 flex items-center justify-center" onClick={publicMintHandler}>{minting ? "Minting" : "Mint"}</button>
+                                            )
+                                        )
+                                    ) }
+                            </div>
                         <div className="w-full mt-11 text-ukraine-gray text-xs md:text-sm flex justify-center items-center italic" style={{
                             background: "linear-gradient(-90deg, rgba(241, 231, 140, 0.54) 0%, rgba(140, 193, 241, 0) 100%)",
                             height: "200px"

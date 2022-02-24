@@ -84,7 +84,7 @@ contract NftMint is ERC721Royalty, Ownable, ReentrancyGuard {
         _cost = cost_;
     }
 
-    function balance() external view onlyOwner returns (uint256) {
+    function balance() external view returns (uint256) {
         return address(this).balance;
     }
 
