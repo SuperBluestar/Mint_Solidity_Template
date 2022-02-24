@@ -59,7 +59,7 @@ const Web3ModalContextProvider = ({ children }) => {
                 contentLabel="Wallet Connect Web3Modal"
                 overlayClassName="fixed left-0 top-0 w-full h-full flex justify-center items-center backdrop-blur-sm"
                 id="modal-id"
-                className="w-96 px-6 py-4 border border-green-900 rounded-md outline-none"
+                className="w-96 px-6 py-4 border border-green-900 rounded-md outline-none bg-white"
                 ariaHideApp={false}
                 preventScroll={true}
             >
