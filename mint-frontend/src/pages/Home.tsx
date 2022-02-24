@@ -25,7 +25,7 @@ import {
 } from 'utils/ContractActions';
 
 const Home: FC = () => {
-    const { openModal } = useContext(Web3ModalContext);
+    const { openModal, closeModal } = useContext(Web3ModalContext);
     const [update, refresh] = useState<number>(0);
     const connector = useConnector();
     const IsActive = useIsActive(connector);
@@ -48,6 +48,9 @@ const Home: FC = () => {
             let res = await publicMint(mintCnt, Account, contract, cost);
             if (res.success) {
                 alert("Tx is done successfully");
+                if (closeModal) {
+                    closeModal();
+                }
                 refresh(val => val + 1)
             } else {
                 alert("Failed to Tx");

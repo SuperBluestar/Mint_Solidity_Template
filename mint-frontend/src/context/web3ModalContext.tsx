@@ -14,16 +14,6 @@ import type { Web3Provider } from '@ethersproject/providers';
 interface IWeb3ModalContext {
     openModal?: () => void,
     closeModal?: () => void,
-    ChainId?: number,
-    IsActivating?: boolean,
-    Error?: Error,
-    Accounts?: string[],
-    Account?: string,
-    IsActive?: boolean,
-    Provider?: Web3Provider,
-    ENSNames?: (string | null)[],
-    ENSName?: string | null,
-    priorityConnector?: Connector
 }
 
 export const Web3ModalContext = createContext<IWeb3ModalContext>({ });
