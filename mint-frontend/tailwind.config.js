@@ -20,6 +20,16 @@ module.exports = {
       // => @media (min-width: 1536px) { ... }
     },
     extend: {
+      colors: {
+        'ukraine-blue': "#3A75C5",
+        'ukraine-yellow': '#F9DD1A',
+        'ukraine-light-black': '#1B2C43',
+        'ukraine-gray': '#959292',
+        'ukraine-light-gray': '#F6F6F6',
+      },
+      fontFamily: {
+        'montserrat': ['"Montserrat"'],
+      }
     },
   },
   plugins: [],

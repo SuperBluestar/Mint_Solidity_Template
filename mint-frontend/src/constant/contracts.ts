@@ -34,7 +34,7 @@ export const DAI_CONTRACT: { [chainId: number]: ContractSetup } = {
 
 export const NFT_CONTRACT: { [chainId: number]: ContractSetup } = {
   4: {
-    address: "0x5E7ab94bdd5A8ebe97Bf0c0f03D8cfA951a1eEcd",
+    address: "0x236569C535F561e82F1ceAAab211358Be07975Fb",
     abi: [
       {
         "inputs": [

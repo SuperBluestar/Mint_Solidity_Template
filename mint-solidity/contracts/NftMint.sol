@@ -12,7 +12,7 @@ contract NftMint is ERC721Royalty, Ownable, ReentrancyGuard {
     string private _baseUri = "";
     string private _baseExtension = ".json";
     uint24 private _currentTokenId = 0;
-    uint24 private _totalSupply = 1000000; // uint24 (0 ~ 16,777,215)
+    uint24 private _totalSupply = 16_777_215; // uint24 (0 ~ 16,777,215)
     uint64 private _cost = 0.01 ether; // uint64 (0 ~ 18,446,744,073,709,551,615)
 
     constructor(

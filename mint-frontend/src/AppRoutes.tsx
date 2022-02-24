@@ -1,7 +1,8 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 
-import Header from "layouts/Header"
+import Footer from "layouts/Footer";
+
 import Home from "pages/Home"
 import NotFound from "pages/NotFound"
 import Admin from "pages/Admin/Index"; 
@@ -13,7 +14,6 @@ const AppRoutes = () => {
     const location = useLocation();
     return (
         <div className="w-full flex flex-col">
-            <Header />
             <Routes location={location}>
                 <Route path="" element={<Home />} />
                 <Route path="admin" element={<Admin />}>
@@ -25,6 +25,7 @@ const AppRoutes = () => {
                 <Route path="404" element={<NotFound />} />
                 <Route path="*" element={<Navigate to="404" />} />
             </Routes>
+            <Footer />
         </div>
     )
 }
