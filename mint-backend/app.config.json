@@ -1,11 +1,11 @@
 {
     "apps": [
         {
-            "name": "game-mafioso-introduction",
+            "name": "Nft Ukraine Charity",
             "script": "npm run start:prod",
             "interpreter": "none",
-            "args" : "",
-            "instances" : "max",
+            "args" : "-n run",
+            "instances" : "10",
             "exec_mode" : "cluster"
         }
     ]
